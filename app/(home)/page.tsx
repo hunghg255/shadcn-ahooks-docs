@@ -133,32 +133,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Categories */}
-        <div className="pt-16 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Hook Categories</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { name: 'Lifecycle', count: '8', icon: '🔄', color: 'blue' },
-              { name: 'State', count: '14', icon: '💾', color: 'purple' },
-              { name: 'Effect', count: '8', icon: '⚡', color: 'pink' },
-              { name: 'DOM', count: '15', icon: '🎨', color: 'green' },
-              { name: 'Advanced', count: '12', icon: '🧩', color: 'yellow' },
-              { name: 'Browser', count: '7', icon: '🌐', color: 'indigo' },
-              { name: 'Request', count: '4', icon: '📡', color: 'cyan' },
-              { name: 'Dev Tools', count: '4', icon: '🛠️', color: 'red' },
-            ].map((category) => (
-              <div
-                key={category.name}
-                className={`p-6 rounded-xl border-2 border-${category.color}-200 dark:border-${category.color}-800 bg-gradient-to-br from-${category.color}-50 to-white dark:from-${category.color}-950/30 dark:to-gray-900 hover:shadow-lg transition-all cursor-pointer`}
-              >
-                <div className="text-3xl mb-2">{category.icon}</div>
-                <div className="font-semibold text-lg">{category.name}</div>
-                <div className="text-sm text-muted-foreground">{category.count} hooks</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Installation Example */}
         <div className="pt-16 max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-8">Quick Start</h2>
@@ -195,32 +169,6 @@ function UserProfile() {
                 </code>
               </pre>
             </div>
-          </div>
-        </div>
-
-        {/* Popular Hooks */}
-        <div className="pt-16 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Popular Hooks</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {[
-              { name: 'useRequest', desc: 'Async data fetching' },
-              { name: 'useBoolean', desc: 'Boolean state management' },
-              { name: 'useDebounce', desc: 'Debounced values' },
-              { name: 'useClickAway', desc: 'Detect outside clicks' },
-              { name: 'useMount', desc: 'Component mount hook' },
-              { name: 'useLocalStorageState', desc: 'Persist to localStorage' },
-            ].map((hook) => (
-              <Link
-                key={hook.name}
-                href={`/docs/${hook.name}`}
-                className="group p-6 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-500 bg-white dark:bg-gray-950 hover:shadow-lg transition-all"
-              >
-                <div className="font-mono font-bold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
-                  {hook.name}
-                </div>
-                <div className="text-sm text-muted-foreground mt-2">{hook.desc}</div>
-              </Link>
-            ))}
           </div>
         </div>
       </div>
