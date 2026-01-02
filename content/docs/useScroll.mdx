@@ -1,0 +1,63 @@
+---
+title: useScroll
+description: Get the scroll position of an element.
+---
+
+## Overview
+
+Get the scroll position of an element.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-scroll)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useScroll.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useScroll.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useScroll.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useScroll.json
+  ```
+  </Tab>
+</Tabs>
+
+Get the scroll position of an element.
+
+## Examples
+
+### Basic Usage
+
+<code src="./demo/demo1.tsx" />
+
+### Detect Whole Page Scroll
+
+<code src="./demo/demo2.tsx" />
+
+### Control listen on scroll status
+
+<code src="./demo/demo3.tsx" />
+
+## API
+
+```typescript
+const position = useScroll(target, shouldUpdate);
+```
+
+### Params
+
+| Property     | Description               | Type                                                                        | Default      |
+| | - | ----- |
+| position | The current scroll position of the element. | `{ left: number, top: number } \| undefined` |

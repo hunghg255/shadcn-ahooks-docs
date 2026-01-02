@@ -1,0 +1,66 @@
+---
+title: useBoolean
+description: A hook that elegantly manages boolean state.
+---
+
+## Overview
+
+A hook that elegantly manages boolean state.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-boolean)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useBoolean.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useBoolean.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useBoolean.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useBoolean.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that elegantly manages boolean state.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const [state, { toggle, set, setTrue, setFalse }] = useBoolean(
+  defaultValue?: boolean,
+);
+```
+
+### Params
+
+| Property     | Description                               | Type      | Default |
+| | | - |
+| defaultValue | The default value of the state. Optional. | `boolean` | `false` |
+
+### Result
+
+| Property | Description                            | Type      |
+| -- | -- | ----- |
+| toggle   | Toggle state         | `() => void`               |
+| set      | Set state            | `(value: boolean) => void` |
+| setTrue  | Set state to `true`  | `() => void`               |
+| setFalse | Set state to `false` | `() => void`               |

@@ -1,0 +1,66 @@
+---
+title: useFocusWithin
+description: Monitor whether the current focus is within a certain area, Same as css attribute [:focus-within](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within).
+---
+
+## Overview
+
+Monitor whether the current focus is within a certain area, Same as css attribute [:focus-within](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within).
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-focuswithin)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useFocusWithin.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useFocusWithin.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useFocusWithin.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useFocusWithin.json
+  ```
+  </Tab>
+</Tabs>
+
+Monitor whether the current focus is within a certain area, Same as css attribute [:focus-within](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within).
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+### Pass in DOM element
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+const isFocusWithin = useFocusWithin(
+  target,
+  {
+   onFocus,
+   onBlur,
+   onChange
+  }
+);
+```
+
+### Params
+
+| Property | Description        | Type                                                        | Default |
+| -- | | | - | --- |
+| isFocusWithin | Whether the focus is in the current area | `boolean` |

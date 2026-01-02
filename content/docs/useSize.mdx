@@ -1,0 +1,65 @@
+---
+title: useSize
+description: A hook that observes size change of an element.
+---
+
+## Overview
+
+A hook that observes size change of an element.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-size)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSize.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSize.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSize.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSize.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that observes size change of an element.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+### Pass in the DOM element
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+const size = useSize(target);
+```
+
+### Params
+
+| Property | Description               | Type                                                          | Default |
+| -- | - | - | - |
+| target   | DOM element or ref object | `Element` \| `(() => Element)` \| `MutableRefObject<Element>` | -       |
+
+### Result
+
+| Property | Description         | Type                                             | Default                                                                   |
+| -- | - | | - |
+| size     | Size of the element | `{ width: number, height: number } \| undefined` | `{ width: target.clientWidth, height: target.clientHeight } \| undefined` |

@@ -1,0 +1,54 @@
+---
+title: useUpdateEffect
+description: A hook alike useEffect but skips running the effect for the first time.
+---
+
+## Overview
+
+A hook alike `useEffect` but skips running the effect for the first time.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-updateeffect)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUpdateEffect.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUpdateEffect.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUpdateEffect.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUpdateEffect.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook alike `useEffect` but skips running the effect for the first time.
+
+## Examples
+
+### Basic usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+The API is exactly the same as `React.useEffect`.
+
+```typescript
+useUpdateEffect(
+  effect: React.EffectCallback,
+  deps?: React.DependencyList,
+)
+```

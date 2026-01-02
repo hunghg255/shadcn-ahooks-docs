@@ -1,0 +1,49 @@
+---
+title: useSafeState
+description: It is exactly the same with React.useState , but after the component is unmounted, the setState in the asynchronous callback will no longer be executed to avoid memory leakage caused by updating the state after the component is unmounted.
+---
+
+## Overview
+
+It is exactly the same with `React.useState` , but after the component is unmounted, the `setState` in the asynchronous callback will no longer be executed to avoid memory leakage caused by updating the state after the component is unmounted.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-safestate)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSafeState.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSafeState.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSafeState.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSafeState.json
+  ```
+  </Tab>
+</Tabs>
+
+It is exactly the same with `React.useState` , but after the component is unmounted, the `setState` in the asynchronous callback will no longer be executed to avoid memory leakage caused by updating the state after the component is unmounted.
+
+## Examples
+
+### Basic usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const [state, setState] = useSafeState(initialState);
+```

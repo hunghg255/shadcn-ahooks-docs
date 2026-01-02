@@ -1,0 +1,68 @@
+---
+title: useExternal
+description: Dynamically load JS or CSS, useExternal can ensure that the resource are globally unique.
+---
+
+## Overview
+
+Dynamically load JS or CSS, useExternal can ensure that the resource are globally unique.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-external)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useExternal.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useExternal.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useExternal.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useExternal.json
+  ```
+  </Tab>
+</Tabs>
+
+Dynamically load JS or CSS, useExternal can ensure that the resource are globally unique.
+
+## Example
+
+### Basic Usage
+
+<code src="./demo/demo1.tsx" />
+
+### Load CSS
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+const status = useExternal(path: string, options?: Options);
+```
+
+### Result
+
+| Params | Description                                                                                  | Type     |
+| | -- | -- |
+| status | The progress of loading the external resources, support `unset`, `loading`, `ready`, `error` | `string` |
+
+### Params
+
+| Params | Description                       | Type     | Default |
+| | ---- |
+| type           | The type of external resources which need to load, support `js`/`css`, if no type, it will deduced according to path | `string`            | -       |
+| js             | Attributes supported by `script`                                                                                     | `HTMLScriptElement` | -       |
+| css            | Attributes supported by `link`                                                                                       | `HTMLStyleElement`  | -       |
+| keepWhenUnused | Allow resources to remain after they have lost their references                                                      | `boolean`           | `false` |

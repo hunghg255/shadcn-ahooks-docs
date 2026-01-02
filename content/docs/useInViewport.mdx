@@ -1,0 +1,69 @@
+---
+title: useInViewport
+description: Observe whether the element is in the visible area, and the visible area ratio of the element. More information refer to [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+---
+
+## Overview
+
+Observe whether the element is in the visible area, and the visible area ratio of the element. More information refer to [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-inviewport)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInViewport.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInViewport.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInViewport.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInViewport.json
+  ```
+  </Tab>
+</Tabs>
+
+Observe whether the element is in the visible area, and the visible area ratio of the element. More information refer to [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+### Observe the visible area ratio of element
+
+<code src="./demo/demo2.tsx" />
+
+### Listening content scrolling selection menu
+
+<code src="./demo/demo3.tsx" />
+
+## API
+
+```typescript
+type Target = Element | (() => Element) | React.MutableRefObject<Element>;
+
+const [inViewport, ratio] = useInViewport(
+  target: Target | Target[],
+  options?: Options
+);
+```
+
+### Params
+
+| Property | Description                        | Type                     | Default |
+| -- | - | - | --- |
+| inViewport | Is visible                                                                               | `boolean` \| `undefined` |
+| ratio      | Current visible ratio, updated every time the node set by `options.threshold` is reached | `number` \| `undefined`  |

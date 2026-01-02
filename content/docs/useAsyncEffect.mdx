@@ -1,0 +1,56 @@
+---
+title: useAsyncEffect
+description: useEffect support async function.
+---
+
+## Overview
+
+useEffect support async function.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-asynceffect)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useAsyncEffect.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useAsyncEffect.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useAsyncEffect.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useAsyncEffect.json
+  ```
+  </Tab>
+</Tabs>
+
+useEffect support async function.
+
+## 代码演示
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+### Break off
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+function useAsyncEffect(
+  effect: () => AsyncGenerator | Promise,
+  deps: DependencyList
+);
+```

@@ -1,0 +1,49 @@
+---
+title: useLatest
+description: A Hook that returns the latest value, effectively avoiding the closure problem.
+---
+
+## Overview
+
+A Hook that returns the latest value, effectively avoiding the closure problem.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-latest)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLatest.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLatest.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLatest.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLatest.json
+  ```
+  </Tab>
+</Tabs>
+
+A Hook that returns the latest value, effectively avoiding the closure problem.
+
+## Examples
+
+### Basic usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const latestValueRef = useLatest<T>(value: T): MutableRefObject<T>;
+```

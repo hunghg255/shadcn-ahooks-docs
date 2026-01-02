@@ -1,0 +1,61 @@
+---
+title: useThrottleEffect
+description: Throttle your useEffect.
+---
+
+## Overview
+
+Throttle your `useEffect`.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-throttleeffect)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useThrottleEffect.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useThrottleEffect.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useThrottleEffect.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useThrottleEffect.json
+  ```
+  </Tab>
+</Tabs>
+
+Throttle your `useEffect`.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+useThrottleEffect(
+  effect: EffectCallback,
+  deps?: DependencyList,
+  options?: Options
+);
+```
+
+### Params
+
+| Property | Description                                                  | Type             | Default |
+| -- | | -- | ---- |
+| wait     | The number of milliseconds to wait.                   | `number`  | `1000`  |
+| leading  | Specify invoking on the leading edge of the timeout.  | `boolean` | `true`  |
+| trailing | Specify invoking on the trailing edge of the timeout. | `boolean` | `true`  |

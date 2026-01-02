@@ -1,0 +1,59 @@
+---
+title: useGetState
+description: Add a getter method to the return value of React.useState to get the latest value
+---
+
+## Overview
+
+Add a getter method to the return value of `React.useState` to get the latest value
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-getstate)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useGetState.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useGetState.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useGetState.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useGetState.json
+  ```
+  </Tab>
+</Tabs>
+
+Add a getter method to the return value of `React.useState` to get the latest value
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## TypeScript definition
+
+```typescript
+import { Dispatch, SetStateAction } from 'react';
+type GetStateAction<S> = () => S;
+
+function useGetState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>, GetStateAction<S>];
+function useGetState<S = undefined>(): [S | undefined, Dispatch<SetStateAction<S | undefined>>, GetStateAction<S | undefined>];
+```
+
+## API
+
+```typescript
+const [state, setState, getState] = useGetState<S>(initialState)
+```

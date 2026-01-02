@@ -1,0 +1,105 @@
+---
+title: useRequest
+description: The API useRequest
+---
+
+## Overview
+
+- `useRequest` is a powerful React hook for managing data fetching and state in your applications. It simplifies the process of making API requests, handling loading states, caching, and error management, allowing developers to focus on building features rather than boilerplate code.
+
+- [Documentation and Examples](https://ahooks.js.org/hooks/use-request)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json
+  ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```ts
+const { loading, run, runAsync } = useRequest(service, {
+  manual: true
+});
+
+<button onClick={run} disabled={loading}>
+  {loading ? 'Loading' : 'Edit'}
+</button>
+```
+
+
+## API
+
+```ts
+const {
+  loading: boolean,
+  data?: TData,
+  error?: Error,
+  params: TParams || [],
+  run: (...params: TParams) => void,
+  runAsync: (...params: TParams) => Promise<TData>,
+  refresh: () => void,
+  refreshAsync: () => Promise<TData>,
+  mutate: (data?: TData | ((oldData?: TData) => (TData | undefined))) => void,
+  cancel: () => void,
+} = useRequest<TData, TParams>(
+  service: (...args: TParams) => Promise<TData>,
+  {
+    manual?: boolean,
+    defaultParams?: TParams,
+    onBefore?: (params: TParams) => void,
+    onSuccess?: (data: TData, params: TParams) => void,
+    onError?: (e: Error, params: TParams) => void,
+    onFinally?: (params: TParams, data?: TData, e?: Error) => void,
+  }
+);
+```
+
+### Result
+
+| Property     | Description                                                                                                                                                                             | Type                                                                  |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| data         | Data returned by service                                                                                                                                                                | `TData` \| `undefined`                                                |
+| error        | Exception thrown by service                                                                                                                                                             | `Error` \| `undefined`                                                |
+| loading      | Is the service being executed                                                                                                                                                           | `boolean`                                                             |
+| params       | An array of parameters for the service being executed. For example, you triggered `run(1, 2, 3)`, then params is equal to `[1, 2, 3]`                                                   | `TParams` \| `[]`                                                     |
+| run          | <ul><li> Manually trigger the execution of the service, and the parameters will be passed to the service</li><li>Automatic handling of exceptions, feedback through `onError`</li></ul> | `(...params : TParams) => void`                                       |
+| runAsync     | The usage is the same as `run`, but it returns a Promise, so you need to handle the exception yourself.                                                                                 | `(...params: TParams) => Promise<TData>`                              |
+| refresh      | Use the last params, call `run` again                                                                                                                                                   | `() => void`                                                          |
+| refreshAsync | Use the last params, call `runAsync` again                                                                                                                                              | `() => Promise<TData>`                                                |
+| mutate       | Mutate `data` directly                                                                                                                                                                  | `(data?: TData / ((oldData?: TData) => (TData / undefined))) => void` |
+| cancel       | Ignore the current promise response                                                                                                                                                     | `() => void`                                                          |
+
+### Options
+
+| Property      | Description                                                                                                                                                                                                      | Type                                                 | Default |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------- |
+| manual        | <ul><li> The default is `false`. That is, the service is automatically executed during initialization. </li><li>If set to `true`, you need to manually call `run` or `runAsync` to trigger execution. </li></ul> | `boolean`                                            | `false` |
+| defaultParams | The parameters passed to the service at the first default execution                                                                                                                                              | `TParams`                                            | -       |
+| onBefore      | Triggered before service execution                                                                                                                                                                               | `(params: TParams) => void`                          | -       |
+| onSuccess     | Triggered when service resolve                                                                                                                                                                                   | `(data: TData, params: TParams) => void`             | -       |
+| onError       | Triggered when service reject                                                                                                                                                                                    | `(e: Error, params: TParams) => void`                | -       |
+| onFinally     | Triggered when service execution is complete                                                                                                                                                                     | `(params: TParams, data?: TData, e?: Error) => void` | -       |
+
+Above we have introduced the most basic functionalities of useRequest, and then we will introduce some more advanced functionalities.
+
+

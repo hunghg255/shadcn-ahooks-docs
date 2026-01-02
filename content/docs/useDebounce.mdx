@@ -1,0 +1,68 @@
+---
+title: useDebounce
+description: A hook that deal with the debounced value.
+---
+
+## Overview
+
+A hook that deal with the debounced value.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-debounce)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDebounce.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDebounce.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDebounce.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDebounce.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that deal with the debounced value.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const debouncedValue = useDebounce(
+  value: any,
+  options?: Options
+);
+```
+
+### Params
+
+| Property | Description                        | Type      | Default |
+| -- | | - |
+| value    | The value to debounce.             | `any`     | -       |
+| options  | Config for the debounce behaviors. | `Options` | -       |
+
+### Options
+
+| Property | Description                                                         | Type      | Default |
+| -- | - | ---- |
+| wait     | The number of milliseconds to delay.                                | `number`  | `1000`  |
+| leading  | Specify invoking on the leading edge of the timeout.                | `boolean` | `false` |
+| trailing | Specify invoking on the trailing edge of the timeout.               | `boolean` | `true`  |
+| maxWait  | The maximum time func is allowed to be delayed before it’s invoked. | `number`  | -       |

@@ -1,0 +1,62 @@
+---
+title: useSet
+description: A hook that can manage the state of Set.
+---
+
+## Overview
+
+A hook that can manage the state of Set.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-set)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSet.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSet.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSet.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSet.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that can manage the state of Set.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const [
+  set,
+  {
+    add,
+    remove,
+    reset
+  }
+] = useSet<K>(initialValue);
+```
+
+### Result
+
+| Property | Description      | Type               |
+| -- | | - | - |
+| initialValue | Optional, set default value | `Iterable<K>` | -       |

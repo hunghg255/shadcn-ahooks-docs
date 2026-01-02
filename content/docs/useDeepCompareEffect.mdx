@@ -1,0 +1,52 @@
+---
+title: useDeepCompareEffect
+description: Usage is the same as useEffect, but deps are compared with react-fast-compare.
+---
+
+## Overview
+
+Usage is the same as `useEffect`, but deps are compared with [react-fast-compare](https://www.npmjs.com/package/react-fast-compare).
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-deepcompareeffect)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDeepCompareEffect.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDeepCompareEffect.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDeepCompareEffect.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useDeepCompareEffect.json
+  ```
+  </Tab>
+</Tabs>
+
+Usage is the same as `useEffect`, but deps are compared with [react-fast-compare](https://www.npmjs.com/package/react-fast-compare).
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+useDeepCompareEffect(
+  effect: React.EffectCallback,
+  deps: React.DependencyList
+);
+```

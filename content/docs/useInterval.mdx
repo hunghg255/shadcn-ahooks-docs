@@ -1,0 +1,69 @@
+---
+title: useInterval
+description: A hook that handles the setInterval timer function.
+---
+
+## Overview
+
+A hook that handles the `setInterval` timer function.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-interval)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInterval.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInterval.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInterval.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useInterval.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that handles the `setInterval` timer function.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+### Advanced usage
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+useInterval(
+  fn: () => void,
+  delay?: number | undefined,
+  options?: Options
+): fn: () => void;
+```
+
+### Params
+
+| Property | Description                                                                                                                                                   | Type                    |
+| -- | - | | | - |
+| immediate | Whether the function should be executed immediately on first execution | `boolean` | `false` |
+
+### Result
+
+| Property      | Description    | Type         |
+| - | -- | |
+| clearInterval | clear interval | `() => void` |

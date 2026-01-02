@@ -1,0 +1,55 @@
+---
+title: useTitle
+description: A hook that set title of the page.
+---
+
+## Overview
+
+A hook that set title of the page.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-title)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTitle.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTitle.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTitle.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTitle.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that set title of the page.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+useTitle(title: string, options?: Options);
+```
+
+### Params
+
+| Property | Description | Type     | Default |
+| -- | - | -- | ---- |
+| restoreOnUnmount | Whether to restore the previous page title when the component is unmounted | `boolean` | `false` |

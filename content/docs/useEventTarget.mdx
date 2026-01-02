@@ -1,0 +1,60 @@
+---
+title: useEventTarget
+description: A hook that encapsulates onChange and value logic for form controls that obtains value through event.target.value. It also supports custom transformer and reset functionalities.
+---
+
+## Overview
+
+A hook that encapsulates `onChange` and `value` logic for form controls that obtains value through `event.target.value`. It also supports custom transformer and reset functionalities.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-eventtarget)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useEventTarget.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useEventTarget.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useEventTarget.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useEventTarget.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that encapsulates `onChange` and `value` logic for form controls that obtains value through `event.target.value`. It also supports custom transformer and reset functionalities.
+
+## Example
+
+### Basic Usage
+
+<code src="./demo/demo1.tsx" />
+
+### Custom transformer
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+const [value, { onChange, reset }] = useEventTarget<T, U>(Options<T, U>);
+```
+
+### Result
+
+| Property | Description                                 | Type                                    |
+| -- | - | -- | - |
+| initialValue | initial value                              | `T`               | -       |
+| transformer  | custom transform function applied to value | `(value: U) => T` | -       |

@@ -1,0 +1,63 @@
+---
+title: useLockFn
+description: Add lock to an async function to prevent parallel executions.
+---
+
+## Overview
+
+Add lock to an async function to prevent parallel executions.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-lockfn)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLockFn.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLockFn.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLockFn.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useLockFn.json
+  ```
+  </Tab>
+</Tabs>
+
+Add lock to an async function to prevent parallel executions.
+
+## Examples
+
+### Basic usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+function useLockFn<P extends any[] = any[], V = any>(
+  fn: (...args: P) => Promise<V>
+): fn: (...args: P) => Promise<V | undefined>;
+```
+
+### Result
+
+| Property | Description                  | Type                               |
+| -- | - |
+| fn       | The async function with lock | `(...args: any[]) => Promise<any>` |
+
+### Params
+
+| Property | Description       | Type                               | Default |
+| -- | - | - |
+| fn       | An async function | `(...args: any[]) => Promise<any>` | -       |

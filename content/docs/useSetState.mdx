@@ -1,0 +1,59 @@
+---
+title: useSetState
+description: useSetState works similar to this.setState of class component, used to manage the state of object type.
+---
+
+## Overview
+
+useSetState works similar to `this.setState` of class component, used to manage the state of object type.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-setstate)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSetState.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSetState.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSetState.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSetState.json
+  ```
+  </Tab>
+</Tabs>
+
+useSetState works similar to `this.setState` of class component, used to manage the state of object type.
+
+## Examples
+
+### Default usage
+
+<code src="./demo/demo1.tsx" />
+
+### Updating with callback
+
+<code src="./demo/demo2.tsx" />
+
+## API
+
+```typescript
+const [state, setState] = useSetState<T>(initialState);
+```
+
+### Result
+
+| Property | Description          | Type                                                                                      | Default |
+| -- | -- | ---- |
+| initialState | Initial state | `T \| () => T` | -       |

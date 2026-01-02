@@ -1,0 +1,58 @@
+---
+title: useTrackedEffect
+description: A hook of useEffect that allow us to track which dependencies caused the effect to trigger.
+---
+
+## Overview
+
+A hook of useEffect that allow us to track which dependencies caused the effect to trigger.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-trackedeffect)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTrackedEffect.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTrackedEffect.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTrackedEffect.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useTrackedEffect.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook of useEffect that allow us to track which dependencies caused the effect to trigger.
+
+## Examples
+
+### Basic usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+useTrackedEffect(
+  effect: (changes: [], previousDeps: [], currentDeps: []) => (void | (() => void | undefined)),
+  deps?: deps,
+)
+```
+
+The API is alike `React.useEffect`, but the first function will receive three parameters: `changes`, `previousDeps`, and `currentDeps`.
+
+- changes: Index of changed dependencies
+- previousDeps: Last deps
+- currentDeps: Current deps

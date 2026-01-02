@@ -1,0 +1,55 @@
+---
+title: useUnmount
+description: A hook that executes the function right before the component is unmounted.
+---
+
+## Overview
+
+A hook that executes the function right before the component is unmounted.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-unmount)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmount.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmount.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmount.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmount.json
+  ```
+  </Tab>
+</Tabs>
+
+A hook that executes the function right before the component is unmounted.
+
+## Examples
+
+### Default Usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+useUnmount(fn: () => void);
+```
+
+### Params
+
+| Property | Description                 | Type         | Default |
+| -- | ---- |
+| fn       | The function to be executed | `() => void` | -       |

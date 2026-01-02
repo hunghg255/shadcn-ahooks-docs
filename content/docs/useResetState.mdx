@@ -1,0 +1,51 @@
+---
+title: useResetState
+description: useResetState works similar to React.useState, it provides a reset method
+---
+
+## Overview
+
+useResetState works similar to `React.useState`, it provides a `reset` method
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-resetstate)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useResetState.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useResetState.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useResetState.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useResetState.json
+  ```
+  </Tab>
+</Tabs>
+
+useResetState works similar to `React.useState`, it provides a `reset` method
+
+## Examples
+
+### Default Usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const [state, setState, resetState] = useResetState<S>(
+  initialState: S | (() => S),
+): [S, Dispatch<SetStateAction<S>>, () => void]
+```

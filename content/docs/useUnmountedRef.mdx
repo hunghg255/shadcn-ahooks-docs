@@ -1,0 +1,55 @@
+---
+title: useUnmountedRef
+description: A Hook can be used to get whether the component is unmounted.
+---
+
+## Overview
+
+A Hook can be used to get whether the component is unmounted.
+
+[Documentation and Examples](https://ahooks.js.org/hooks/use-unmountedref)
+
+## Installation
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmountedRef.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmountedRef.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmountedRef.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useUnmountedRef.json
+  ```
+  </Tab>
+</Tabs>
+
+A Hook can be used to get whether the component is unmounted.
+
+## Examples
+
+### Default Usage
+
+<code src="./demo/demo1.tsx" />
+
+## API
+
+```typescript
+const unmountRef: { current: boolean } = useUnmountedRef();
+```
+
+### Result
+
+| Property   | Description                        | Type                   |
+| - | ---- |
+| unmountRef | Whether the component is unmounted | `{ current: boolean }` |
