@@ -79,6 +79,7 @@
     "useWebSocket",
     "useWhyDidYouUpdate",
     "createDeepCompareEffect",
-    "createUpdateEffect"
+    "createUpdateEffect",
+    "external-hooks"
   ]
 }
