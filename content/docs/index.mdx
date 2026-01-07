@@ -8,3 +8,343 @@ description: Welcome to the documentation!
 Welcome to **shadcn-ahooks**! This documentation will help you get started with using the library effectively.
 
 This Registry provides a collection of React hooks from the popular [ahooks](https://ahooks.js.org/) library, packaged for easy integration with shadcn UI projects.
+
+## Installation
+
+<OpenInV0Button url="https://shadcn-ahooks.vercel.app/shadcn-ahooks.json" />
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/shadcn-ahooks.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/shadcn-ahooks.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/shadcn-ahooks.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/shadcn-ahooks.json
+  ```
+  </Tab>
+</Tabs>
+
+## Overview
+
+The `src/hooks` directory contains custom React hooks organized into two main categories:
+
+- **ahooks**: A comprehensive collection of React hooks (inspired by the ahooks library)
+- **external-hooks**: Additional custom hooks
+
+## Directory Structure
+
+```
+src/hooks/
+├── ahooks/
+│   ├── createDeepCompareEffect/
+│   │   └── index.ts
+│   ├── createUpdateEffect/
+│   │   └── index.ts
+│   ├── createUseStorageState/
+│   │   └── index.ts
+│   ├── useAntdTable/
+│   │   ├── index.tsx
+│   │   └── types.ts
+│   ├── useAsyncEffect/
+│   │   └── index.ts
+│   ├── useBoolean/
+│   │   └── index.ts
+│   ├── useClickAway/
+│   │   └── index.ts
+│   ├── useControllableValue/
+│   │   └── index.ts
+│   ├── useCookieState/
+│   │   └── index.ts
+│   ├── useCountDown/
+│   │   └── index.ts
+│   ├── useCounter/
+│   │   └── index.ts
+│   ├── useCreation/
+│   │   └── index.ts
+│   ├── useDebounce/
+│   │   ├── debounceOptions.ts
+│   │   └── index.ts
+│   ├── useDebounceEffect/
+│   │   └── index.ts
+│   ├── useDebounceFn/
+│   │   └── index.ts
+│   ├── useDeepCompareEffect/
+│   │   └── index.tsx
+│   ├── useDeepCompareLayoutEffect/
+│   │   └── index.tsx
+│   ├── useDocumentVisibility/
+│   │   └── index.ts
+│   ├── useDrag/
+│   │   └── index.ts
+│   ├── useDrop/
+│   │   └── index.ts
+│   ├── useDynamicList/
+│   │   └── index.ts
+│   ├── useEventEmitter/
+│   │   └── index.ts
+│   ├── useEventListener/
+│   │   └── index.ts
+│   ├── useEventTarget/
+│   │   └── index.ts
+│   ├── useExternal/
+│   │   └── index.ts
+│   ├── useFavicon/
+│   │   └── index.ts
+│   ├── useFocusWithin/
+│   │   └── index.tsx
+│   ├── useFullscreen/
+│   │   └── index.ts
+│   ├── useFusionTable/
+│   │   ├── fusionAdapter.ts
+│   │   ├── index.tsx
+│   │   └── types.ts
+│   ├── useGetState/
+│   │   └── index.ts
+│   ├── useHistoryTravel/
+│   │   └── index.ts
+│   ├── useHover/
+│   │   └── index.ts
+│   ├── useInfiniteScroll/
+│   │   ├── index.tsx
+│   │   └── types.ts
+│   ├── useInterval/
+│   │   └── index.ts
+│   ├── useInViewport/
+│   │   └── index.ts
+│   ├── useIsomorphicLayoutEffect/
+│   │   └── index.ts
+│   ├── useKeyPress/
+│   │   └── index.ts
+│   ├── useLatest/
+│   │   └── index.ts
+│   ├── useLocalStorageState/
+│   │   └── index.ts
+│   ├── useLockFn/
+│   │   └── index.ts
+│   ├── useLongPress/
+│   │   └── index.ts
+│   ├── useMap/
+│   │   └── index.ts
+│   ├── useMemoizedFn/
+│   │   └── index.ts
+│   ├── useMount/
+│   │   └── index.ts
+│   ├── useMouse/
+│   │   └── index.ts
+│   ├── useMutationObserver/
+│   │   └── index.ts
+│   ├── useNetwork/
+│   │   └── index.ts
+│   ├── usePagination/
+│   │   └── index.ts
+│   ├── usePrevious/
+│   │   └── index.ts
+│   ├── useRafInterval/
+│   │   └── index.ts
+│   ├── useRafState/
+│   │   └── index.ts
+│   ├── useRafTimeout/
+│   │   └── index.ts
+│   ├── useReactive/
+│   │   └── index.ts
+│   ├── useRequest/
+│   │   └── index.ts
+│   ├── useResetState/
+│   │   └── index.ts
+│   ├── useResponsive/
+│   │   └── index.ts
+│   ├── useSafeState/
+│   │   └── index.ts
+│   ├── useScroll/
+│   │   └── index.ts
+│   ├── useSelections/
+│   │   └── index.ts
+│   ├── useSessionStorageState/
+│   │   └── index.ts
+│   ├── useSet/
+│   │   └── index.ts
+│   ├── useSetState/
+│   │   └── index.ts
+│   ├── useSize/
+│   │   └── index.ts
+│   ├── useTextSelection/
+│   │   └── index.ts
+│   ├── useTheme/
+│   │   └── index.ts
+│   ├── useThrottle/
+│   │   └── index.ts
+│   ├── useThrottleEffect/
+│   │   └── index.ts
+│   ├── useThrottleFn/
+│   │   └── index.ts
+│   ├── useTimeout/
+│   │   └── index.ts
+│   ├── useTitle/
+│   │   └── index.ts
+│   ├── useToggle/
+│   │   └── index.ts
+│   ├── useTrackedEffect/
+│   │   └── index.ts
+│   ├── useUnmount/
+│   │   └── index.ts
+│   ├── useUnmountedRef/
+│   │   └── index.ts
+│   ├── useUpdate/
+│   │   └── index.ts
+│   ├── useUpdateEffect/
+│   │   └── index.ts
+│   ├── useUpdateLayoutEffect/
+│   │   └── index.ts
+│   ├── useUrlState/
+│   │   └── index.ts
+│   ├── useVirtualList/
+│   │   └── index.ts
+│   ├── useWebSocket/
+│   │   └── index.ts
+│   ├── useWhyDidYouUpdate/
+│   │   └── index.ts
+│   └── utils/
+│       └── (utility files)
+│
+└── external-hooks/
+    ├── useCallbackEvent/
+    │   └── index.ts
+    ├── useScrollLocker/
+    │   └── index.ts
+    └── utils/
+        └── (utility files)
+```
+
+## Hook Categories
+
+### State Management Hooks
+- `useBoolean` - Manage boolean state
+- `useCounter` - Counter with increment/decrement
+- `useGetState` - Get latest state value
+- `useMap` - Manage Map data structure
+- `useReactive` - Create reactive state
+- `useResetState` - State with reset functionality
+- `useSafeState` - State that prevents memory leaks
+- `useSet` - Manage Set data structure
+- `useSetState` - Object state management
+- `useToggle` - Toggle between values
+
+### Storage Hooks
+- `useCookieState` - Manage cookie state
+- `useLocalStorageState` - LocalStorage state
+- `useSessionStorageState` - SessionStorage state
+- `createUseStorageState` - Create storage hook factory
+
+### Effect Hooks
+- `useAsyncEffect` - Async effect hook
+- `useDebounceEffect` - Debounced effect
+- `useDeepCompareEffect` - Effect with deep comparison
+- `useDeepCompareLayoutEffect` - Layout effect with deep comparison
+- `useThrottleEffect` - Throttled effect
+- `useTrackedEffect` - Track effect dependencies
+- `useUpdateEffect` - Effect that skips first render
+- `useUpdateLayoutEffect` - Layout effect that skips first render
+- `createDeepCompareEffect` - Create deep compare effect
+- `createUpdateEffect` - Create update effect factory
+
+### Performance Hooks
+- `useDebounce` - Debounce value
+- `useDebounceFn` - Debounce function
+- `useThrottle` - Throttle value
+- `useThrottleFn` - Throttle function
+- `useMemoizedFn` - Memoize function
+- `useCreation` - Memoization like useMemo
+- `useLatest` - Get latest value without re-render
+- `usePrevious` - Get previous value
+
+### DOM & Event Hooks
+- `useClickAway` - Detect clicks outside element
+- `useEventListener` - Add event listener
+- `useEventTarget` - Manage form inputs
+- `useFocusWithin` - Detect focus within element
+- `useHover` - Detect hover state
+- `useKeyPress` - Handle keyboard events
+- `useLongPress` - Detect long press
+- `useMouse` - Track mouse position
+- `useScroll` - Track scroll position
+- `useSize` - Monitor element size
+- `useTextSelection` - Track text selection
+
+### Network & Request Hooks
+- `useRequest` - Data fetching and management
+- `useWebSocket` - WebSocket connection
+
+### Lifecycle Hooks
+- `useMount` - Run on mount
+- `useUnmount` - Run on unmount
+- `useUnmountedRef` - Check if component is unmounted
+- `useUpdate` - Force component update
+
+### Timer Hooks
+- `useCountDown` - Countdown timer
+- `useInterval` - setInterval hook
+- `useRafInterval` - requestAnimationFrame interval
+- `useRafTimeout` - requestAnimationFrame timeout
+- `useTimeout` - setTimeout hook
+
+### Advanced Hooks
+- `useAntdTable` - Ant Design table integration
+- `useControllableValue` - Controlled/uncontrolled components
+- `useDrag` - Drag functionality
+- `useDrop` - Drop functionality
+- `useDynamicList` - Manage dynamic list
+- `useEventEmitter` - Event emitter pattern
+- `useExternal` - Load external resources
+- `useFavicon` - Manage favicon
+- `useFullscreen` - Fullscreen API
+- `useFusionTable` - Fusion table integration
+- `useHistoryTravel` - History state management
+- `useInfiniteScroll` - Infinite scroll
+- `useInViewport` - Element in viewport detection
+- `useLockFn` - Prevent concurrent function calls
+- `useMutationObserver` - MutationObserver API
+- `useNetwork` - Network status
+- `usePagination` - Pagination logic
+- `useResponsive` - Responsive breakpoints
+- `useSelections` - Selection management
+- `useTitle` - Document title
+- `useUrlState` - Sync state with URL
+- `useVirtualList` - Virtual list rendering
+- `useWhyDidYouUpdate` - Debug re-renders
+
+### Layout Hooks
+- `useDocumentVisibility` - Document visibility state
+- `useIsomorphicLayoutEffect` - Cross-platform useLayoutEffect
+- `useRafState` - State with requestAnimationFrame
+
+### External Hooks
+- `useCallbackEvent` - Custom callback event handling
+- `useScrollLocker` - Lock/unlock scroll
+
+## Usage
+
+Import hooks directly from their directories:
+
+```typescript
+import { useBoolean } from '@/hooks/ahooks/useBoolean';
+import { useCallbackEvent } from '@/hooks/external-hooks/useCallbackEvent';
+```
+
+## Notes
+
+- Most hooks follow the pattern of one hook per directory
+- Each hook has its main implementation in `index.ts` or `index.tsx`
+- Some hooks have additional type definitions in `types.ts` files
+- Utility functions are stored in `utils/` directories
