@@ -42,7 +42,46 @@ useResetState works similar to `React.useState`, it provides a `reset` method
 
 ### Default Usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useResetState"
+ code={`
+import useResetState from '@/src/hooks/ahooks/useResetState';
+import React, { useMemo } from 'react';
+
+const Example = () => {
+ const initialValue = {
+    hello: '',
+    value: Math.random(),
+  };
+  const initialValueMemo = useMemo(() => {
+    return initialValue;
+  }, []);
+
+  const [state, setState, resetState] = useResetState(initialValue);
+
+  return (
+    <div>
+      <div>initial state: </div>
+      <pre>{JSON.stringify(initialValueMemo, null, 2)}</pre>
+      <div>current state: </div>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+      <div>
+        <button
+          onClick={() =>
+            setState(() => ({
+              hello: 'world',
+              value: Math.random(),
+            }))
+          }
+        >
+          set hello and value
+        </button>
+        <button onClick={resetState}>resetState</button>
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

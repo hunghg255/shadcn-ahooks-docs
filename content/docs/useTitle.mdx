@@ -42,7 +42,22 @@ A hook that set title of the page.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useTitle"
+ code={`
+import useTitle from '@/src/hooks/ahooks/useTitle';
+
+
+const Example = () => {
+    useTitle('Page Title');
+
+  return (
+    <div>
+      <p>Set title of the page.</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -53,5 +68,11 @@ useTitle(title: string, options?: Options);
 ### Params
 
 | Property | Description | Type     | Default |
-| -- | - | -- | ---- |
+| -------- | ----------- | -------- | ------- |
+| title    | Page title  | `string` | -       |
+
+### Options
+
+| Property         | Description                                                                | Type      | Default |
+| ---------------- | -------------------------------------------------------------------------- | --------- | ------- |
 | restoreOnUnmount | Whether to restore the previous page title when the component is unmounted | `boolean` | `false` |

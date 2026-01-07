@@ -18,7 +18,48 @@ As in the example code above, after the request is failed, it will retry 3 times
 
 You can type text in the input box below and click the Edit button to experience the effect
 
-<code src="./demo/retry.tsx" />
+
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import React, { useState } from 'react';
+
+function editUsername(username: string) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('Failed to modify username'));
+    }, 1000);
+  });
+}
+
+const Example = () => {
+ const [state, setState] = useState('');
+  const { loading, run } = useRequest(editUsername, {
+    retryCount: 3,
+    manual: true,
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button disabled={loading} type="button" onClick={() => run(state)}>
+        {loading ? 'Loading' : 'Edit'}
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

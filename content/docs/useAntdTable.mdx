@@ -59,7 +59,61 @@ The following demos are for antd v4. For v3, please refer to: https://ahooks-v2.
 
 <br />
 
-<code src="./demo/table.tsx" />
+```tsx
+import { Table } from 'antd';
+import React from 'react';
+import { useAntdTable } from 'ahooks';
+
+interface Item {
+  name: {
+    last: string;
+  };
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+}
+
+interface Result {
+  total: number;
+  list: Item[];
+}
+
+const getTableData = ({ current, pageSize }): Promise<Result> => {
+  const query = `page=${current}&size=${pageSize}`;
+
+  return fetch(`https://randomuser.me/api?results=55&${query}`)
+    .then((res) => res.json())
+    .then((res) => ({
+      total: res.info.results,
+      list: res.results,
+    }));
+};
+
+export default () => {
+  const { tableProps } = useAntdTable(getTableData);
+
+  const columns = [
+    {
+      title: 'name',
+      dataIndex: ['name', 'last'],
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'phone',
+      dataIndex: 'phone',
+    },
+    {
+      title: 'gender',
+      dataIndex: 'gender',
+    },
+  ];
+
+  return <Table columns={columns} rowKey="email" style={{ overflow: 'auto' }} {...tableProps} />;
+};
+```
 
 ### Form and Table data binding
 
@@ -72,7 +126,143 @@ When `useAntdTable` receives the `form` instance, it will return a search object
 
 In the following example, you can try out the data binding between form and table.
 
-<code src="./demo/form.tsx" />
+```tsx
+import React from 'react';
+import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
+import { useAntdTable } from 'ahooks';
+import ReactJson from 'react-json-view';
+
+const { Option } = Select;
+
+interface Item {
+  name: {
+    last: string;
+  };
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+}
+
+interface Result {
+  total: number;
+  list: Item[];
+}
+
+const getTableData = ({ current, pageSize }, formData: Object): Promise<Result> => {
+  let query = `page=${current}&size=${pageSize}`;
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      query += `&${key}=${value}`;
+    }
+  });
+
+  return fetch(`https://randomuser.me/api?results=55&${query}`)
+    .then((res) => res.json())
+    .then((res) => ({
+      total: res.info.results,
+      list: res.results,
+    }));
+};
+
+export default () => {
+  const [form] = Form.useForm();
+
+  const { tableProps, search, params } = useAntdTable(getTableData, {
+    defaultPageSize: 5,
+    form,
+  });
+
+  const { type, changeType, submit, reset } = search;
+
+  const columns = [
+    {
+      title: 'name',
+      dataIndex: ['name', 'last'],
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'phone',
+      dataIndex: 'phone',
+    },
+    {
+      title: 'gender',
+      dataIndex: 'gender',
+    },
+  ];
+
+  const advanceSearchForm = (
+    <div>
+      <Form form={form}>
+        <Row gutter={24}>
+          <Col span={8}>
+            <Form.Item label="name" name="name">
+              <Input placeholder="name" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="email" name="email">
+              <Input placeholder="email" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="phone" name="phone">
+              <Input placeholder="phone" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24} justify="end" style={{ marginBottom: 24 }}>
+          <Button type="primary" onClick={submit}>
+            Search
+          </Button>
+          <Button onClick={reset} style={{ marginLeft: 16 }}>
+            Reset
+          </Button>
+          <Button type="link" onClick={changeType}>
+            Simple Search
+          </Button>
+        </Row>
+      </Form>
+    </div>
+  );
+
+  const searchForm = (
+    <div style={{ marginBottom: 16 }}>
+      <Form form={form} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Form.Item name="gender" initialValue="male">
+          <Select style={{ width: 120, marginRight: 16 }} onChange={submit}>
+            <Option value="">all</Option>
+            <Option value="male">male</Option>
+            <Option value="female">female</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="name">
+          <Input.Search placeholder="enter name" style={{ width: 240 }} onSearch={submit} />
+        </Form.Item>
+        <Button type="link" onClick={changeType}>
+          Advanced Search
+        </Button>
+      </Form>
+    </div>
+  );
+
+  return (
+    <div>
+      {type === 'simple' ? searchForm : advanceSearchForm}
+      <Table columns={columns} rowKey="email" style={{ overflow: 'auto' }} {...tableProps} />
+
+      <div style={{ background: '#f5f5f5', padding: 8 }}>
+        <p>Current Table:</p>
+        <ReactJson src={params[0]!} collapsed={2} />
+        <p>Current Form:</p>
+        <ReactJson src={params[1]!} collapsed={2} />
+      </div>
+    </div>
+  );
+};
+```
 
 ### Default Params
 
@@ -82,19 +272,441 @@ It should be noted that the initial form data can be filled with all the form da
 
 The following example sets paging data and form data during initialization.
 
-<code src="./demo/init.tsx" />
+```tsx
+import React from 'react';
+import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
+import { useAntdTable } from 'ahooks';
+import ReactJson from 'react-json-view';
+
+const { Option } = Select;
+
+interface Item {
+  name: {
+    last: string;
+  };
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+}
+
+interface Result {
+  total: number;
+  list: Item[];
+}
+
+const getTableData = ({ current, pageSize }, formData: Object): Promise<Result> => {
+  let query = `page=${current}&size=${pageSize}`;
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      query += `&${key}=${value}`;
+    }
+  });
+
+  return fetch(`https://randomuser.me/api?results=55&${query}`)
+    .then((res) => res.json())
+    .then((res) => ({
+      total: res.info.results,
+      list: res.results,
+    }));
+};
+
+export default () => {
+  const [form] = Form.useForm();
+
+  const { loading, tableProps, search, params } = useAntdTable(getTableData, {
+    form,
+    defaultParams: [
+      { current: 2, pageSize: 5 },
+      { name: 'hello', email: 'abc@gmail.com', gender: 'female' },
+    ],
+    defaultType: 'advance',
+  });
+
+  const { type, changeType, submit, reset } = search;
+
+  const columns = [
+    {
+      title: 'name',
+      dataIndex: ['name', 'last'],
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'phone',
+      dataIndex: 'phone',
+    },
+    {
+      title: 'gender',
+      dataIndex: 'gender',
+    },
+  ];
+
+  const advanceSearchForm = (
+    <div>
+      <Form form={form}>
+        <Row gutter={24}>
+          <Col span={8}>
+            <Form.Item label="name" name="name">
+              <Input placeholder="name" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="email" name="email">
+              <Input placeholder="email" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="phone" name="phone">
+              <Input placeholder="phone" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24} justify="end" style={{ marginBottom: 24 }}>
+          <Button type="primary" onClick={submit}>
+            Search
+          </Button>
+          <Button onClick={reset} style={{ marginLeft: 16 }}>
+            Reset
+          </Button>
+          <Button type="link" onClick={changeType}>
+            Simple Search
+          </Button>
+        </Row>
+      </Form>
+    </div>
+  );
+
+  const searchForm = (
+    <div style={{ marginBottom: 16 }}>
+      <Form form={form} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Form.Item name="gender" initialValue="male">
+          <Select style={{ width: 120, marginRight: 16 }} onChange={submit}>
+            <Option value="">all</Option>
+            <Option value="male">male</Option>
+            <Option value="female">female</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="name">
+          <Input.Search placeholder="enter name" style={{ width: 240 }} onSearch={submit} />
+        </Form.Item>
+        <Button type="link" onClick={changeType}>
+          Advanced Search
+        </Button>
+      </Form>
+    </div>
+  );
+
+  return (
+    <div>
+      {type === 'simple' ? searchForm : advanceSearchForm}
+      <Table columns={columns} rowKey="email" style={{ overflow: 'auto' }} {...tableProps} />
+
+      <div style={{ background: '#f5f5f5', padding: 8 }}>
+        <p>Current Table:</p>
+        <ReactJson src={params[0]!} collapsed={2} />
+        <p>Current Form:</p>
+        <ReactJson src={params[1]!} collapsed={2} />
+      </div>
+    </div>
+  );
+};
+```
 
 ### Form Validation
 
 Before the form is submitted, we will call `form.validateFields` to validate the form data. If the verification fails, the request will not be initiated.
 
-<code src="./demo/validate.tsx" />
+```tsx
+import { Form, Input, Select, Table } from 'antd';
+import React from 'react';
+import { useAntdTable } from 'ahooks';
+import ReactJson from 'react-json-view';
+
+const { Option } = Select;
+
+interface Item {
+  name: {
+    last: string;
+  };
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+}
+
+interface Result {
+  total: number;
+  list: Item[];
+}
+
+const getTableData = ({ current, pageSize }, formData: Object): Promise<Result> => {
+  let query = `page=${current}&size=${pageSize}`;
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      query += `&${key}=${value}`;
+    }
+  });
+
+  return fetch(`https://randomuser.me/api?results=55&${query}`)
+    .then((res) => res.json())
+    .then((res) => ({
+      total: res.info.results,
+      list: res.results,
+    }));
+};
+
+export default () => {
+  const [form] = Form.useForm();
+
+  const { tableProps, search, params } = useAntdTable(getTableData, {
+    defaultPageSize: 5,
+    form,
+  });
+
+  const { submit } = search;
+
+  const columns = [
+    {
+      title: 'name',
+      dataIndex: ['name', 'last'],
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'phone',
+      dataIndex: 'phone',
+    },
+    {
+      title: 'gender',
+      dataIndex: 'gender',
+    },
+  ];
+
+  const searchForm = (
+    <div style={{ marginBottom: 16 }}>
+      <Form form={form} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Form.Item name="gender" initialValue="male">
+          <Select style={{ width: 120, marginRight: 16 }} onChange={submit}>
+            <Option value="">all</Option>
+            <Option value="male">male</Option>
+            <Option value="female">female</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="name"
+          initialValue="jack"
+          rules={[{ required: true, message: 'name is required' }]}
+        >
+          <Input.Search placeholder="enter name" style={{ width: 240 }} onSearch={submit} />
+        </Form.Item>
+      </Form>
+    </div>
+  );
+
+  return (
+    <div>
+      {searchForm}
+      <Table columns={columns} rowKey="email" style={{ overflow: 'auto' }} {...tableProps} />
+
+      <div style={{ background: '#f5f5f5', padding: 8 }}>
+        <p>Current Table:</p>
+        <ReactJson src={params[0]!} collapsed={2} />
+        <p>Current Form:</p>
+        <ReactJson src={params[1]!} collapsed={2} />
+      </div>
+    </div>
+  );
+};
+```
 
 ### Data Caching
 
 By setting `cacheKey`, we can apply the data caching for the `Form` and `Table`.
 
-<code src="./demo/cache.tsx" />
+```tsx
+import React, { useState } from 'react';
+import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
+import { useAntdTable, clearCache } from 'ahooks';
+import ReactJson from 'react-json-view';
+
+const { Option } = Select;
+
+interface Item {
+  name: {
+    last: string;
+  };
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+}
+
+interface Result {
+  total: number;
+  list: Item[];
+}
+
+const getTableData = (
+  { current, pageSize, sorter, filters, extra },
+  formData: Object,
+): Promise<Result> => {
+  console.log(sorter, filters, extra);
+  let query = `page=${current}&size=${pageSize}`;
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      query += `&${key}=${value}`;
+    }
+  });
+
+  return fetch(`https://randomuser.me/api?results=55&${query}`)
+    .then((res) => res.json())
+    .then((res) => ({
+      total: res.info.results,
+      list: res.results,
+    }));
+};
+
+const UserList = () => {
+  const [form] = Form.useForm();
+
+  const { tableProps, search, params } = useAntdTable(getTableData, {
+    defaultPageSize: 5,
+    form,
+    cacheKey: 'useAntdTableCache',
+  });
+
+  const { sorter = {}, filters = {} } = params[0] || ({} as any);
+
+  const { type, changeType, submit, reset } = search;
+
+  const columns = [
+    {
+      title: 'name',
+      dataIndex: ['name', 'last'],
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'phone',
+      dataIndex: 'phone',
+      sorter: true,
+      sortOrder: sorter.field === 'phone' && sorter.order,
+    },
+    {
+      title: 'gender',
+      dataIndex: 'gender',
+      filters: [
+        { text: 'male', value: 'male' },
+        { text: 'female', value: 'female' },
+      ],
+      filteredValue: filters.gender,
+    },
+  ];
+
+  const advanceSearchForm = (
+    <div>
+      <Form form={form}>
+        <Row gutter={24}>
+          <Col span={8}>
+            <Form.Item label="name" name="name">
+              <Input placeholder="name" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="email" name="email">
+              <Input placeholder="email" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="phone" name="phone">
+              <Input placeholder="phone" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24} justify="end" style={{ marginBottom: 24 }}>
+          <Button type="primary" onClick={submit}>
+            Search
+          </Button>
+          <Button onClick={reset} style={{ marginLeft: 16 }}>
+            Reset
+          </Button>
+          <Button type="link" onClick={changeType}>
+            Simple Search
+          </Button>
+        </Row>
+      </Form>
+    </div>
+  );
+
+  const searchForm = (
+    <div style={{ marginBottom: 16 }}>
+      <Form form={form} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Form.Item name="gender" initialValue="male">
+          <Select style={{ width: 120, marginRight: 16 }} onChange={submit}>
+            <Option value="">all</Option>
+            <Option value="male">male</Option>
+            <Option value="female">female</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="name">
+          <Input.Search placeholder="enter name" style={{ width: 240 }} onSearch={submit} />
+        </Form.Item>
+        <Button type="link" onClick={changeType}>
+          Advanced Search
+        </Button>
+      </Form>
+    </div>
+  );
+
+  return (
+    <div>
+      {type === 'simple' ? searchForm : advanceSearchForm}
+      <Table columns={columns} rowKey="email" style={{ overflow: 'auto' }} {...tableProps} />
+
+      <div style={{ background: '#f5f5f5', padding: 8 }}>
+        <p>Current Table:</p>
+        <ReactJson src={params[0]!} collapsed={2} />
+        <p>Current Form:</p>
+        <ReactJson src={params[0]!} collapsed={2} />
+      </div>
+    </div>
+  );
+};
+
+const Demo = () => {
+  const [show, setShow] = useState(true);
+
+  return (
+    <div>
+      <Button
+        danger
+        onClick={() => {
+          setShow(!show);
+        }}
+        style={{ marginBottom: 16 }}
+      >
+        {show ? 'Click to destroy' : 'Click recovery'}
+      </Button>
+      <Button
+        danger
+        onClick={() => {
+          clearCache('useAntdTableCache');
+        }}
+        style={{ marginBottom: 16, marginLeft: 8 }}
+      >
+        Click to clearCache
+      </Button>
+      {show && <UserList />}
+    </div>
+  );
+};
+
+export default Demo;
+```
 
 ## API
 
@@ -144,7 +756,7 @@ const {
 ### Result
 
 | Property          | Description                                | Type                  |
-| |
+| ----------------- | ------------------------------------------ | --------------------- |
 | tableProps        | The data required by the `Table` component | -                     |
 | search.type       | Current form type                          | `simple` \| `advance` |
 | search.changeType | Switch form type                           | `() => void`          |
@@ -154,7 +766,7 @@ const {
 ### Params
 
 | Property        | Description                                                                                | Type                     | Default  |
-| ----- |
+| --------------- | ------------------------------------------------------------------------------------------ | ------------------------ | -------- |
 | form            | `Form` instance                                                                            | -                        | -        |
 | defaultType     | Default form type                                                                          | `simple` \| `advance`    | `simple` |
 | defaultParams   | Default parameters, the first item is paging data, the second item is form data            | `[pagination, formData]` | -        |

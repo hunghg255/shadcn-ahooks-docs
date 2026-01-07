@@ -42,11 +42,119 @@ A Hook to return the previous state.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="usePrevious"
+ code={`
+import usePrevious from '@/src/hooks/ahooks/usePrevious';
+import React, { useState } from 'react';
+
+
+const Example = () => {
+   const [count, setCount] = useState(0);
+  const previous = usePrevious(count);
+  return (
+    <>
+      <div>counter current value: {count}</div>
+      <div style={{ marginBottom: 8 }}>counter previous value: {previous}</div>
+      <button type="button" onClick={() => setCount((c) => c + 1)}>
+        increase
+      </button>
+      <button type="button" style={{ marginLeft: 8 }} onClick={() => setCount((c) => c - 1)}>
+        decrease
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Custom shouldUpdate function
 
-<code src="./demo/demo2.tsx" />
+<Preview name="usePrevious"
+ code={`
+import usePrevious from '@/src/hooks/ahooks/usePrevious';
+import React, { useState } from 'react';
+
+interface Person {
+  name: string;
+  job: string;
+}
+
+const nameCompareFunction = (prev: Person | undefined, next: Person) => {
+  if (!prev) {
+    return true;
+  }
+  if (prev.name !== next.name) {
+    return true;
+  }
+  return false;
+};
+
+const jobCompareFunction = (prev: Person | undefined, next: Person) => {
+  if (!prev) {
+    return true;
+  }
+  if (prev.job !== next.job) {
+    return true;
+  }
+  return false;
+};
+
+const Example = () => {
+  const [state, setState] = useState({ name: 'Jack', job: 'student' });
+  const [nameInput, setNameInput] = useState('');
+  const [jobInput, setJobInput] = useState('');
+  const previousName = usePrevious(state, nameCompareFunction);
+  const previousJob = usePrevious(state, jobCompareFunction);
+
+  return (
+    <>
+      <div style={{ margin: '8px 0', border: '1px solid #e8e8e8', padding: 8 }}>
+        <div>current name: {state.name}</div>
+        <div>current job: {state.job}</div>
+      </div>
+      <div>previous name: {(previousName || {}).name}</div>
+      <div style={{ marginBottom: 8 }}>previous job: {(previousJob || {}).job}</div>
+      <div style={{ marginTop: 8 }}>
+        <input
+          style={{ width: 220 }}
+          value={nameInput}
+          onChange={(e) => setNameInput(e.target.value)}
+          placeholder="new name"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            setState((s) => ({ ...s, name: nameInput }));
+          }}
+          style={{ marginLeft: 8 }}
+        >
+          update
+        </button>
+      </div>
+      <div style={{ marginTop: 8 }}>
+        <input
+          style={{ width: 220 }}
+          value={jobInput}
+          onChange={(e) => setJobInput(e.target.value)}
+          placeholder="new job"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            setState((s) => ({ ...s, job: jobInput }));
+          }}
+          style={{ marginLeft: 8 }}
+        >
+          update
+        </button>
+      </div>
+    </>
+  );
+};
+
+export default Example;`} />
+
+
 
 ## API
 
@@ -60,6 +168,12 @@ const previousState: T = usePrevious<T>(
 ### Result
 
 | Property      | Description        | Type |
-| - | | - |
+| ------------- | ------------------ | ---- |
+| previousState | The previous value | `T`  |
+
+### Params
+
+| Property     | Description                                                   | Type                                         | Default                      |
+| ------------ | ------------------------------------------------------------- | -------------------------------------------- | ---------------------------- |
 | state        | The state that needs to be tracked                            | `T`                                          | -                            |
 | shouldUpdate | Optional. Customize whether the state value should be updated | `(prev: T \| undefined, next: T) => boolean` | `(a, b) => !Object.is(a, b)` |

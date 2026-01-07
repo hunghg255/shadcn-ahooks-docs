@@ -54,11 +54,18 @@ A hook that ensures callback functions always reference the latest version witho
 
 ## Usage
 
-```tsx
-import useCallbackEvent from 'ahooks';
+<Preview name="useCallbackEvent"
+ code={`
+import useCallbackEvent from '@/src/hooks/external-hooks/useCallbackEvent';
+import React, { useState, useCallback, memo } from 'react';
 
-function Component() {
-  const [count, setCount] = useState(0);
+const ExpensiveChild = memo(({ onClick }) => {
+  console.log('ExpensiveChild rendered!');
+  return <button onClick={onClick}>Click Me</button>;
+});
+
+const Example = () => {
+   const [count, setCount] = useState(0);
 
   // The callback always has access to the latest count
   // but the function reference never changes
@@ -66,19 +73,27 @@ function Component() {
     console.log('Current count:', count);
   });
 
-  return <ExpensiveChild onClick={handleClick} />;
-}
-```
+  return <>
+  <p>Count: {count}</p>
+  <button onClick={() => setCount(count + 1)}>
+    Increment Count
+  </button>
+  <ExpensiveChild onClick={handleClick} />
+  </>;
+};
+
+export default Example;`} />
 
 ## Examples
 
 ### Basic Usage - Solving Stale Closure
 
-```tsx
-import React, { useState, useCallback } from 'react';
-import useCallbackEvent from 'ahooks';
+<Preview name="useCallbackEvent"
+ code={`
+import useCallbackEvent from '@/src/hooks/external-hooks/useCallbackEvent';
+import React, { useState, useCallback, memo } from 'react';
 
-export default () => {
+const Example = () => {
   const [count, setCount] = useState(0);
 
   // ❌ Wrong: This will always log 0 because of stale closure
@@ -111,20 +126,22 @@ export default () => {
     </div>
   );
 };
-```
+
+export default Example;`} />
 
 ### Preventing Re-renders with Memoized Children
 
-```tsx
+<Preview name="useCallbackEvent"
+ code={`
+import useCallbackEvent from '@/src/hooks/external-hooks/useCallbackEvent';
 import React, { useState, useCallback, memo } from 'react';
-import useCallbackEvent from 'ahooks';
 
 const ExpensiveChild = memo(({ onClick, label }) => {
   console.log('ExpensiveChild rendered!');
   return <button onClick={onClick}>{label}</button>;
 });
 
-export default () => {
+const Example = () => {
   const [count, setCount] = useState(0);
   const [message, setMessage] = useState('Hello');
 
@@ -167,16 +184,18 @@ export default () => {
     </div>
   );
 };
-```
+
+export default Example;`} />
 
 ### With Event Listeners
 
-```tsx
-import React, { useState, useEffect } from 'react';
-import useCallbackEvent from 'ahooks';
+<Preview name="useCallbackEvent"
+ code={`
+import useCallbackEvent from '@/src/hooks/external-hooks/useCallbackEvent';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 
-export default () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+const Example = () => {
+   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [color, setColor] = useState('blue');
 
   // Always has access to latest color without re-adding listener
@@ -206,16 +225,18 @@ export default () => {
     </div>
   );
 };
-```
+
+export default Example;`} />
 
 ### With Third-Party Libraries
 
-```tsx
-import React, { useState, useEffect, useRef } from 'react';
-import useCallbackEvent from 'ahooks';
+<Preview name="useCallbackEvent"
+ code={`
+import useCallbackEvent from '@/src/hooks/external-hooks/useCallbackEvent';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 
-export default () => {
-  const [count, setCount] = useState(0);
+const Example = () => {
+   const [count, setCount] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
 
   // Simulating a third-party library that stores callbacks
@@ -230,7 +251,7 @@ export default () => {
   });
 
   const handleEvent = useCallbackEvent(() => {
-    const log = `Event triggered! Count: ${count}`;
+    const log = \`Event triggered! Count: \${count}\`;
     setLogs(prev => [...prev, log]);
   });
 
@@ -264,7 +285,9 @@ export default () => {
     </div>
   );
 };
-```
+
+export default Example;`} />
+
 
 ## API
 

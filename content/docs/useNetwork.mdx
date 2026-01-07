@@ -42,7 +42,23 @@ A hook that tracks the state of network connection.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useNetwork"
+ code={`
+import useNetwork from '@/src/hooks/ahooks/useNetwork';
+
+
+const Example = () => {
+  const networkState = useNetwork();
+
+  return (
+    <div>
+      <div>Network information: </div>
+      <pre>{JSON.stringify(networkState, null, 2)}</pre>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -64,7 +80,7 @@ const result: NetworkState = useNetwork();
 ### Result
 
 | Property      | Description                                                    | Type                                                                                           |
-| - | -- | ---- |
+| ------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | online        | Whether connected to network                                   | `boolean`                                                                                      |
 | since         | `online` latest update time                                    | `Date`                                                                                         |
 | rtt           | The effective round-trip time estimate in milliseconds         | `number`                                                                                       |
@@ -75,3 +91,4 @@ const result: NetworkState = useNetwork();
 | effectiveType | The effective connection type                                  | `slow-2g` \| `2g` \| `3g` \| `4g`                                                              |
 
 More information refer to [MDN NetworkInformation](https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation)
+

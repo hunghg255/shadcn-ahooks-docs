@@ -42,7 +42,29 @@ A hook that deal with the debounced value.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useDebounce"
+ code={`
+import React, { useState } from 'react';
+import useDebounce from '@/src/hooks/ahooks/useDebounce';
+
+const Example = () => {
+ const [value, setValue] = useState<string>();
+  const debouncedValue = useDebounce(value, { wait: 500 });
+
+  return (
+    <div>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Typed value"
+        style={{ width: 280 }}
+      />
+      <p style={{ marginTop: 16 }}>DebouncedValue: {debouncedValue}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -56,14 +78,14 @@ const debouncedValue = useDebounce(
 ### Params
 
 | Property | Description                        | Type      | Default |
-| -- | | - |
+| -------- | ---------------------------------- | --------- | ------- |
 | value    | The value to debounce.             | `any`     | -       |
 | options  | Config for the debounce behaviors. | `Options` | -       |
 
 ### Options
 
 | Property | Description                                                         | Type      | Default |
-| -- | - | ---- |
+| -------- | ------------------------------------------------------------------- | --------- | ------- |
 | wait     | The number of milliseconds to delay.                                | `number`  | `1000`  |
 | leading  | Specify invoking on the leading edge of the timeout.                | `boolean` | `false` |
 | trailing | Specify invoking on the trailing edge of the timeout.               | `boolean` | `true`  |

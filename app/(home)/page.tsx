@@ -78,7 +78,7 @@ export default function HomePage() {
             </svg>
           </Link>
           <a
-            href="https://github.com/alibaba/hooks"
+            href='https://github.com/hunghg255/shadcn-ahooks'
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-700 font-semibold hover:border-blue-500 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all flex items-center gap-2"
@@ -140,9 +140,9 @@ export default function HomePage() {
             <div>
               <div className="text-sm font-semibold text-muted-foreground mb-2">1. Install a hook</div>
               <div className="flex items-center gap-2 p-4 rounded-xl bg-gray-100 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-800 font-mono text-sm">
-                <span className="flex-1">npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json</span>
+                <span className="flex-1">pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json</span>
                 <button
-                  onClick={() => navigator.clipboard.writeText('npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json')}
+                  onClick={() => navigator.clipboard.writeText('pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useRequest.json')}
                   className="text-blue-600 hover:text-blue-700 transition-colors p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
                   title="Copy to clipboard"
                 >
@@ -156,7 +156,7 @@ export default function HomePage() {
               <div className="text-sm font-semibold text-muted-foreground mb-2">2. Use in your component</div>
               <pre className="p-4 rounded-xl bg-gray-900 dark:bg-black border-2 border-gray-800 overflow-x-auto text-sm">
                 <code className="text-gray-100">
-{`import { useRequest } from '@/hooks/useRequest';
+{`import { useRequest } from '@/hooks/ahooks/useRequest';
 
 function UserProfile() {
   const { data, loading } = useRequest(

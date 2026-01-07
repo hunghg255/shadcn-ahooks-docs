@@ -42,7 +42,32 @@ React Hook for getting responsive info.
 
 ### Get responsive info in components
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useResponsive"
+ code={`
+import useResponsive, { configResponsive } from '@/src/hooks/ahooks/useResponsive';
+
+configResponsive({
+  small: 0,
+  middle: 800,
+  large: 1200,
+});
+
+
+const Example = () => {
+  const responsive = useResponsive();
+  return (
+    <>
+      <p>Please change the width of the browser window to see the effect: </p>
+      {Object.keys(responsive).map((key) => (
+        <p key={key}>
+          {key} {responsive[key] ? '✔' : '✘'}
+        </p>
+      ))}
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

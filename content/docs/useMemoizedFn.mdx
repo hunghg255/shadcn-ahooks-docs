@@ -64,11 +64,112 @@ const func = useMemoizedFn(() => {
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useMemoizedFn"
+ code={`
+import useMemoizedFn from '@/src/hooks/ahooks/useMemoizedFn';
+import React, { useState, useCallback } from 'react';
+
+const Example = () => {
+   const [count, setCount] = useState(0);
+
+  const callbackFn = useCallback(() => {
+    console.info(\`Current count is \${count}\`);
+  }, [count]);
+
+  const memoizedFn = useMemoizedFn(() => {
+    console.info(\`Current count is \${count}\`);
+  });
+
+  return (
+    <>
+      <p>count: {count}</p>
+      <button
+        type="button"
+        onClick={() => {
+          setCount((c) => c + 1);
+        }}
+      >
+        Add Count
+      </button>
+      <div style={{ marginTop: 16 }}>
+        <button type="button" onClick={callbackFn}>
+          call callbackFn
+        </button>
+        <button type="button" onClick={memoizedFn} style={{ marginLeft: 8 }}>
+          call memoizedFn
+        </button>
+      </div>
+    </>
+  );
+};
+
+export default Example;`} />
+
 
 ### Performance Improvement
 
-<code src="./demo/demo2.tsx" />
+
+<Preview name="useMemoizedFn"
+ code={`
+import useMemoizedFn from '@/src/hooks/ahooks/useMemoizedFn';
+import React, { useCallback, useRef, useState } from 'react';
+
+// some expensive component with React.memo
+const ExpensiveTree = React.memo<{ [key: string]: any }>(({ showCount }) => {
+  const renderCountRef = useRef(0);
+  renderCountRef.current += 1;
+
+  return (
+    <div>
+      <p>Render Count: {renderCountRef.current}</p>
+      <button type="button" onClick={showCount}>
+        showParentCount
+      </button>
+    </div>
+  );
+});
+
+const Example = () => {
+   const [count, setCount] = useState(0);
+
+  const callbackFn = useCallback(() => {
+    console.info(\`Current count is \${count}\`);
+  }, [count]);
+
+  const memoizedFn = useMemoizedFn(() => {
+    console.info(\`Current count is \${count}\`);
+  });
+
+  return (
+    <>
+      <p>count: {count}</p>
+      <button
+        type="button"
+        onClick={() => {
+          setCount((c) => c + 1);
+        }}
+      >
+        Add Count
+      </button>
+
+      <p>You can click the button to see the number of sub-component renderings</p>
+
+      <div style={{ marginTop: 32 }}>
+        <h3>Component with useCallback function:</h3>
+        {/* use callback function, ExpensiveTree component will re-render on state change */}
+        <ExpensiveTree showCount={callbackFn} />
+      </div>
+
+      <div style={{ marginTop: 32 }}>
+        <h3>Component with useMemoizedFn function:</h3>
+        {/* use memoized function, ExpensiveTree component will only render once */}
+        <ExpensiveTree showCount={memoizedFn} />
+      </div>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -79,7 +180,13 @@ const memoizedFn = useMemoizedFn<T>(fn: T): T;
 ### Result
 
 | Property   | Description                                       | Type                      |
-| | - | - |
+| ---------- | ------------------------------------------------- | ------------------------- |
+| memoizedFn | Function that the reference address never changes | `(...args: any[]) => any` |
+
+### Params
+
+| Property | Description                       | Type                      | Default |
+| -------- | --------------------------------- | ------------------------- | ------- |
 | fn       | Function that require persistence | `(...args: any[]) => any` | -       |
 
 ## FAQ

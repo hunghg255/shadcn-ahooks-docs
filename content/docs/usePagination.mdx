@@ -49,25 +49,406 @@ description: usePagination is implemented based on useRequest and encapsulates c
 
 The default usage is the same as `useRequest`, but an additional `pagination` parameter will be returned, which contains all pagination information and functions to operate pagination.
 
-<code src="./demo/demo1.tsx" />
+```tsx
+import { usePagination } from 'ahooks';
+import { Pagination } from 'antd';
+import Mock from 'mockjs';
+import React from 'react';
+
+interface UserListItem {
+  id: string;
+  name: string;
+  gender: 'male' | 'female';
+  email: string;
+  disabled: boolean;
+}
+
+const userList = (current: number, pageSize: number) =>
+  Mock.mock({
+    total: 55,
+    [`list|${pageSize}`]: [
+      {
+        id: '@guid',
+        name: '@name',
+        'gender|1': ['male', 'female'],
+        email: '@email',
+        disabled: false,
+      },
+    ],
+  });
+
+async function getUserList(params: {
+  current: number;
+  pageSize: number;
+}): Promise<{ total: number; list: UserListItem[] }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(userList(params.current, params.pageSize));
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+  const { data, loading, pagination } = usePagination(getUserList);
+  return (
+    <div>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <ul>
+          {data?.list?.map((item) => (
+            <li key={item.email}>
+              {item.name} - {item.email}
+            </li>
+          ))}
+        </ul>
+      )}
+      <Pagination
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        total={data?.total}
+        onChange={pagination.onChange}
+        onShowSizeChange={pagination.onChange}
+        showQuickJumper
+        showSizeChanger
+        style={{ marginTop: 16, textAlign: 'right' }}
+      />
+    </div>
+  );
+};
+
+export default Example;
+```
 
 ### More parameters
 
 The following code demonstrates that the gender parameter is added. When the gender is modified, the paging is reset to the first page and the data is requested again.
 
-<code src="./demo/demo2.tsx" />
+```tsx
+import { Pagination } from 'antd';
+import Mock from 'mockjs';
+import React, { useEffect, useState } from 'react';
+import { usePagination } from 'ahooks';
+
+interface UserListItem {
+  id: string;
+  name: string;
+  gender: 'male' | 'female';
+  email: string;
+  disabled: boolean;
+}
+
+const userList = (current: number, pageSize: number) =>
+  Mock.mock({
+    total: 55,
+    [`list|${pageSize}`]: [
+      {
+        id: '@guid',
+        name: '@name',
+        'gender|1': ['male', 'female'],
+        email: '@email',
+        disabled: false,
+      },
+    ],
+  });
+
+async function getUserList(params: {
+  current: number;
+  pageSize: number;
+  gender: string;
+}): Promise<{ total: number; list: UserListItem[] }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(userList(params.current, params.pageSize));
+    }, 1000);
+  });
+}
+
+export default () => {
+  const [gender, setGender] = useState<string>('male');
+
+  const { data, loading, pagination, run, params } = usePagination(
+    ({ current, pageSize }, g: string) => {
+      return getUserList({
+        current,
+        pageSize,
+        gender: g,
+      });
+    },
+    {
+      manual: true,
+    },
+  );
+
+  useEffect(() => {
+    run(
+      {
+        current: 1,
+        pageSize: params[0]?.pageSize || 10,
+      },
+      gender,
+    );
+  }, [gender]);
+
+  return (
+    <div>
+      <select
+        value={gender}
+        style={{ width: 180, marginBottom: 24 }}
+        onChange={(e) => setGender(e.target.value)}
+        placeholder="select gender"
+      >
+        <option value="male">male</option>
+        <option value="female">female</option>
+      </select>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <ul>
+          {data?.list?.map((item) => (
+            <li key={item.email}>
+              {item.name} - {item.email}
+            </li>
+          ))}
+        </ul>
+      )}
+      <Pagination
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        total={data?.total}
+        onChange={pagination.onChange}
+        onShowSizeChange={pagination.onChange}
+        showQuickJumper
+        showSizeChanger
+        style={{ marginTop: 16, textAlign: 'right' }}
+      />
+    </div>
+  );
+};
+```
 
 ### refreshDeps
 
 `refreshDeps` is a syntactic sugar. When it changes, it will reset the page to the first page and request data again. Generally, you can put the dependent conditions here. The following example implements the previous function more conveniently through `refreshDeps`.
 
-<code src="./demo/demo3.tsx" />
+```tsx
+import { usePagination } from 'ahooks';
+import { useUpdateEffect } from 'ahooks';
+import { Pagination } from 'antd';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+
+interface UserListItem {
+  id: string;
+  name: string;
+  gender: 'male' | 'female';
+  email: string;
+  disabled: boolean;
+}
+
+const userList = (current: number, pageSize: number) =>
+  Mock.mock({
+    total: 55,
+    [`list|${pageSize}`]: [
+      {
+        id: '@guid',
+        name: '@name',
+        'gender|1': ['male', 'female'],
+        email: '@email',
+        disabled: false,
+      },
+    ],
+  });
+
+async function getUserList(params: {
+  current: number;
+  pageSize: number;
+  gender: string;
+}): Promise<{ total: number; list: UserListItem[] }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(userList(params.current, params.pageSize));
+    }, 1000);
+  });
+}
+
+export default () => {
+  const [gender, setGender] = useState<string>('male');
+
+  const { data, loading, pagination } = usePagination(
+    ({ current, pageSize }) => {
+      return getUserList({
+        current,
+        pageSize,
+        gender,
+      });
+    },
+    {
+      refreshDeps: [gender],
+    },
+  );
+
+  return (
+    <div>
+      <select
+        value={gender}
+        style={{ width: 180, marginBottom: 24 }}
+        onChange={(e) => setGender(e.target.value)}
+        placeholder="select gender"
+      >
+        <option value="male">male</option>
+        <option value="female">female</option>
+      </select>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <ul>
+          {data?.list?.map((item) => (
+            <li key={item.email}>
+              {item.name} - {item.email}
+            </li>
+          ))}
+        </ul>
+      )}
+      <Pagination
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        total={data?.total}
+        onChange={pagination.onChange}
+        onShowSizeChange={pagination.onChange}
+        showQuickJumper
+        showSizeChanger
+        style={{ marginTop: 16, textAlign: 'right' }}
+      />
+    </div>
+  );
+};
+```
 
 ### Cache
 
 Through the `params` caching capability of `useRequest`, we can cache paging data and other conditions.
 
-<code src="./demo/demo4.tsx" />
+```tsx
+import { useBoolean, useUpdateEffect } from 'ahooks';
+import { Pagination } from 'antd';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+import { usePagination } from 'ahooks';
+
+interface UserListItem {
+  id: string;
+  name: string;
+  gender: 'male' | 'female';
+  email: string;
+  disabled: boolean;
+}
+
+const userList = (current: number, pageSize: number) =>
+  Mock.mock({
+    total: 55,
+    [`list|${pageSize}`]: [
+      {
+        id: '@guid',
+        name: '@name',
+        'gender|1': ['male', 'female'],
+        email: '@email',
+        disabled: false,
+      },
+    ],
+  });
+
+async function getUserList(params: {
+  current: number;
+  pageSize: number;
+  gender: string;
+}): Promise<{ total: number; list: UserListItem[] }> {
+  console.log('cache demo', params.current, params.pageSize, params.gender);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(userList(params.current, params.pageSize));
+    }, 1000);
+  });
+}
+
+const PaginationComponent: React.FC = () => {
+  const { data, loading, pagination, run, params } = usePagination(
+    ({ current, pageSize }, g: string) => {
+      return getUserList({
+        current,
+        pageSize,
+        gender: g,
+      });
+    },
+    {
+      cacheKey: 'userList',
+    },
+  );
+
+  const [gender, setGender] = useState<string>(params[1] || 'male');
+
+  useUpdateEffect(() => {
+    run(
+      {
+        current: 1,
+        pageSize: params[0]?.pageSize || 10,
+      },
+      gender,
+    );
+  }, [gender]);
+
+  return (
+    <div>
+      <select
+        value={gender}
+        style={{ width: 180, marginBottom: 24 }}
+        onChange={(e) => setGender(e.target.value)}
+        placeholder="select gender"
+      >
+        <option value="male">male</option>
+        <option value="female">female</option>
+      </select>
+      {loading && !data ? (
+        <p>loading</p>
+      ) : (
+        <ul>
+          {data?.list?.map((item) => (
+            <li key={item.email}>
+              {item.name} - {item.email}
+            </li>
+          ))}
+        </ul>
+      )}
+      <Pagination
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        total={data?.total}
+        onChange={pagination.onChange}
+        onShowSizeChange={pagination.onChange}
+        showQuickJumper
+        showSizeChanger
+        style={{ marginTop: 16, textAlign: 'right' }}
+      />
+    </div>
+  );
+};
+
+export default () => {
+  const [state, { toggle }] = useBoolean();
+  return (
+    <div>
+      <p>You can click the button multiple times, the conditions of pagination will be cached.</p>
+      <p>
+        <button type="button" onClick={() => toggle()}>
+          show/hide
+        </button>
+      </p>
+      {state && <PaginationComponent />}
+    </div>
+  );
+};
+```
 
 ## API
 
@@ -102,13 +483,13 @@ const {
 ### Result
 
 | Property   | Description                                 | Type |
-| - |
+| ---------- | ------------------------------------------- | ---- |
 | pagination | Paging data and methods of paging operation | `-`  |
 
 ### Params
 
 | Property        | Description                                                                                                                                      | Type                   | Default |
-| - | - |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------- | ------- |
 | defaultPageSize | Default page size                                                                                                                                | `number`               | 10       |
 | defaultCurrent  | Number of pages on initial request                                                                                                               | `number`               | 1       |
 | refreshDeps     | Changes in `refreshDeps` will reset current to the first page and re-initiate the request. Generally, you can put the dependent conditions here. | `React.DependencyList` | `[]`    |

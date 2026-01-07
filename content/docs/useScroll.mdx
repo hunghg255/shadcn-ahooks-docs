@@ -42,15 +42,148 @@ Get the scroll position of an element.
 
 ### Basic Usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useScroll"
+ code={`
+import useScroll from '@/src/hooks/ahooks/useScroll';
+import React, { useRef } from 'react';
+
+
+const Example = () => {
+ const ref = useRef(null);
+  const scroll = useScroll(ref);
+  return (
+    <>
+      <p>{JSON.stringify(scroll)}</p>
+      <div
+        style={{
+          height: '160px',
+          width: '160px',
+          border: 'solid 1px #000',
+          overflow: 'scroll',
+          whiteSpace: 'nowrap',
+          fontSize: '32px',
+        }}
+        ref={ref}
+      >
+        <div>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aspernatur atque, debitis ex
+          excepturi explicabo iste iure labore molestiae neque optio perspiciatis
+        </div>
+        <div>
+          Aspernatur cupiditate, deleniti id incidunt mollitia omnis! A aspernatur assumenda
+          consequuntur culpa cumque dignissimos enim eos, et fugit natus nemo nesciunt
+        </div>
+        <div>
+          Alias aut deserunt expedita, inventore maiores minima officia porro rem. Accusamus ducimus
+          magni modi mollitia nihil nisi provident
+        </div>
+        <div>
+          Alias aut autem consequuntur doloremque esse facilis id molestiae neque officia placeat,
+          quia quisquam repellendus reprehenderit.
+        </div>
+        <div>
+          Adipisci blanditiis facere nam perspiciatis sit soluta ullam! Architecto aut blanditiis,
+          consectetur corporis cum deserunt distinctio dolore eius est exercitationem
+        </div>
+        <div>Ab aliquid asperiores assumenda corporis cumque dolorum expedita</div>
+        <div>
+          Culpa cumque eveniet natus totam! Adipisci, animi at commodi delectus distinctio dolore
+          earum, eum expedita facilis
+        </div>
+        <div>
+          Quod sit, temporibus! Amet animi fugit officiis perspiciatis, quis unde. Cumque
+          dignissimos distinctio, dolor eaque est fugit nisi non pariatur porro possimus, quas quasi
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Detect Whole Page Scroll
 
-<code src="./demo/demo2.tsx" />
+
+<Preview name="useScroll"
+ code={`
+import useScroll from '@/src/hooks/ahooks/useScroll';
+
+
+const Example = () => {
+   const scroll = useScroll(document);
+  return (
+    <div>
+      <div>{JSON.stringify(scroll)}</div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Control listen on scroll status
 
-<code src="./demo/demo3.tsx" />
+
+<Preview name="useScroll"
+ code={`
+import useScroll from '@/src/hooks/ahooks/useScroll';
+import React, { useRef } from 'react';
+
+
+const Example = () => {
+   const ref = useRef(null);
+
+  const scroll = useScroll(ref, (val) => val.top > 100 && val.top < 200);
+
+  return (
+    <>
+      <p>{JSON.stringify(scroll)}</p>
+      <div
+        style={{
+          height: '160px',
+          width: '160px',
+          border: 'solid 1px #000',
+          overflow: 'scroll',
+          whiteSpace: 'nowrap',
+          fontSize: '36px',
+        }}
+        ref={ref}
+      >
+        <div>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aspernatur atque, debitis ex
+          excepturi explicabo iste iure labore molestiae neque optio perspiciatis
+        </div>
+        <div>
+          Aspernatur cupiditate, deleniti id incidunt mollitia omnis! A aspernatur assumenda
+          consequuntur culpa cumque dignissimos enim eos, et fugit natus nemo nesciunt
+        </div>
+        <div>
+          Alias aut deserunt expedita, inventore maiores minima officia porro rem. Accusamus ducimus
+          magni modi mollitia nihil nisi provident
+        </div>
+        <div>
+          Alias aut autem consequuntur doloremque esse facilis id molestiae neque officia placeat,
+          quia quisquam repellendus reprehenderit.
+        </div>
+        <div>
+          Adipisci blanditiis facere nam perspiciatis sit soluta ullam! Architecto aut blanditiis,
+          consectetur corporis cum deserunt distinctio dolore eius est exercitationem
+        </div>
+        <div>Ab aliquid asperiores assumenda corporis cumque dolorum expedita</div>
+        <div>
+          Culpa cumque eveniet natus totam! Adipisci, animi at commodi delectus distinctio dolore
+          earum, eum expedita facilis
+        </div>
+        <div>
+          Quod sit, temporibus! Amet animi fugit officiis perspiciatis, quis unde. Cumque
+          dignissimos distinctio, dolor eaque est fugit nisi non pariatur porro possimus, quas quasi
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -61,5 +194,12 @@ const position = useScroll(target, shouldUpdate);
 ### Params
 
 | Property     | Description               | Type                                                                        | Default      |
-| | - | ----- |
+| ------------ | ------------------------- | --------------------------------------------------------------------------- | ------------ |
+| target       | DOM element or ref object | `Element` \| `Document` \| `(() => Element)` \| `MutableRefObject<Element>` | `document`   |
+| shouldUpdate | Whether update position   | `({ top: number, left: number }) => boolean`                                | `() => true` |
+
+### Result
+
+| Property | Description                                 | Type                                         |
+| -------- | ------------------------------------------- | -------------------------------------------- |
 | position | The current scroll position of the element. | `{ left: number, top: number } \| undefined` |

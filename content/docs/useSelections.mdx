@@ -42,15 +42,227 @@ This hook is used for Checkbox group, supports multiple selection, single select
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+```tsx
+import { Checkbox, Col, Row } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { useSelections } from 'ahooks';
+
+export default () => {
+  const [hideOdd, setHideOdd] = useState(false);
+  const list = useMemo(() => {
+    if (hideOdd) {
+      return [2, 4, 6, 8];
+    }
+    return [1, 2, 3, 4, 5, 6, 7, 8];
+  }, [hideOdd]);
+
+  const { selected, allSelected, isSelected, toggle, toggleAll, partiallySelected } = useSelections(
+    list,
+    {
+      defaultSelected: [1],
+    },
+  );
+
+  return (
+    <div>
+      <div>Selected: {selected.join(',')}</div>
+      <div style={{ borderBottom: '1px solid #E9E9E9', padding: '10px 0' }}>
+        <Checkbox checked={allSelected} onClick={toggleAll} indeterminate={partiallySelected}>
+          Check all
+        </Checkbox>
+        <Checkbox checked={hideOdd} onClick={() => setHideOdd((v) => !v)}>
+          Hide Odd
+        </Checkbox>
+      </div>
+      <Row style={{ padding: '10px 0' }}>
+        {list.map((o) => (
+          <Col span={12} key={o}>
+            <Checkbox checked={isSelected(o)} onClick={() => toggle(o)}>
+              {o}
+            </Checkbox>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+};
+```
 
 ### Object array
 
-<code src="./demo/demo2.tsx" />
+```tsx
+import { Checkbox, Col, Row } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { useSelections } from 'ahooks';
+
+export default () => {
+  const [hideOdd, setHideOdd] = useState(false);
+  const list = useMemo(() => {
+    if (hideOdd) {
+      return [2, 4, 6, 8].map((id) => ({ id }));
+    }
+    return [1, 2, 3, 4, 5, 6, 7, 8].map((id) => ({ id }));
+  }, [hideOdd]);
+
+  const { selected, allSelected, isSelected, toggle, toggleAll, partiallySelected } = useSelections(
+    list,
+    {
+      defaultSelected: [{ id: 1 }],
+      itemKey: 'id',
+    },
+  );
+
+  return (
+    <div>
+      <div>Selected: {JSON.stringify(selected)}</div>
+      <div style={{ borderBottom: '1px solid #E9E9E9', padding: '10px 0' }}>
+        <Checkbox checked={allSelected} onClick={toggleAll} indeterminate={partiallySelected}>
+          Check all
+        </Checkbox>
+        <Checkbox checked={hideOdd} onClick={() => setHideOdd((v) => !v)}>
+          Hide Odd
+        </Checkbox>
+      </div>
+      <Row style={{ padding: '10px 0' }}>
+        {list.map((item) => (
+          <Col span={12} key={item.id}>
+            <Checkbox checked={isSelected(item)} onClick={() => toggle(item)}>
+              {item.id}
+            </Checkbox>
+          </Col>
+        ))}
+      </Row>
+    </div>
+  );
+};
+```
 
 ### Pagination
 
-<code src="./demo/demo3.tsx" />
+```tsx
+import { Checkbox, Divider, Pagination, Spin } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useSelections } from 'ahooks';
+
+interface DataType {
+  id: number;
+  title: string;
+}
+
+interface PaginationType {
+  current: number;
+  pageSize: number;
+  total?: number;
+}
+
+const dataSource = Array.from({ length: 50 }, (item, index) => ({
+  id: index,
+  title: `title ${index}`,
+}));
+
+const getDataFromServer = (props: PaginationType) => {
+  const { current, pageSize } = props;
+  const data = dataSource.slice((current - 1) * pageSize, current * pageSize);
+
+  return new Promise<{
+    data: DataType[];
+    total: PaginationType['total'];
+  }>((resolve) => {
+    setTimeout(
+      () =>
+        resolve({
+          data,
+          total: dataSource.length,
+        }),
+      500,
+    );
+  });
+};
+
+export default () => {
+  const [dataList, setDataList] = useState<DataType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<PaginationType>({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+
+  const getData = async (params: PaginationType) => {
+    setLoading(true);
+
+    const { data, total } = await getDataFromServer(params);
+
+    setLoading(false);
+    setDataList(data);
+    setPagination({ ...params, total });
+  };
+
+  useEffect(() => {
+    getData(pagination);
+  }, []);
+
+  const { selected, allSelected, isSelected, toggle, toggleAll, partiallySelected } = useSelections(
+    dataList,
+    {
+      itemKey: 'id',
+    },
+  );
+
+  return (
+    <Spin spinning={loading}>
+      {dataList.map((item) => {
+        const { id, title } = item;
+
+        return (
+          <div key={id} style={{ display: 'flex', flexDirection: 'row' }}>
+            <Checkbox
+              style={{ padding: '4px 8px' }}
+              onClick={() => toggle(item)}
+              checked={isSelected(item)}
+            >
+              {title}
+            </Checkbox>
+          </div>
+        );
+      })}
+      <Pagination
+        style={{ margin: '12px 0 16px 0' }}
+        size="small"
+        showSizeChanger
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        total={pagination.total}
+        onChange={(page, size) => {
+          getData({
+            current: page,
+            pageSize: size,
+          });
+        }}
+      />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingLeft: '8px',
+        }}
+      >
+        <Checkbox checked={allSelected} indeterminate={partiallySelected} onClick={toggleAll}>
+          Check all
+        </Checkbox>
+        <span style={{ marginLeft: '90px' }}>Selected: {selected.length}</span>
+      </div>
+      {!!selected.length && (
+        <>
+          <Divider />
+          {JSON.stringify(selected)}
+        </>
+      )}
+    </Spin>
+  );
+};
+```
 
 ## API
 
@@ -70,21 +282,21 @@ const result: Result = useSelections<T>(items: T[], defaultSelected?: T[]);
 ### Params
 
 | Property | Description | Type | Default |
-| | |
+| --- | --- | --- | --- |
 | items | Data items | `T[]` | - |
 | options | Optional configuration | `Options` | - |
 
 ### Options
 
 | Property | Description | Type | Default |
-| | |
+| --- | --- | --- | --- |
 | defaultSelected | Default selected data | `T[]` | `[]` |
 | itemKey | The unique key of data item. Typically, this parameter needs to be specified when the data source is an array of object | `string` \| `(item: T) => React.Key` | - |
 
 ### Result
 
 | Property          | Description                                                                                                                                                                                                                                               | Type                                                                |
-| | - |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | selected          | Selected items                                                                                                                                                                                                                                            | `T[]`                                                               |
 | allSelected       | Is all items selected                                                                                                                                                                                                                                     | `boolean`                                                           |
 | noneSelected      | Is no item selected                                                                                                                                                                                                                                       | `boolean`                                                           |

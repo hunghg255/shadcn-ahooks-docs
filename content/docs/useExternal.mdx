@@ -42,11 +42,75 @@ Dynamically load JS or CSS, useExternal can ensure that the resource are globall
 
 ### Basic Usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useExternal"
+ code={`
+import useExternal from '@/src/hooks/ahooks/useExternal';
+
+const Example = () => {
+  const status = useExternal('https://shadcn-ahooks-docs.vercel.app/useExternal/test-external-script.js', {
+    js: {
+      async: true,
+    },
+  });
+
+  return (
+    <>
+      <p>
+        Status: <b>{status}</b>
+      </p>
+      <p>
+        Response: <i>{status === 'ready' ? window.TEST_SCRIPT?.start() : '-'}</i>
+      </p>
+    </>
+  );
+};
+
+export default Example;`} />
+
 
 ### Load CSS
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useExternal"
+ code={`
+import useExternal from '@/src/hooks/ahooks/useExternal';
+import React, { useState } from 'react';
+
+const Example = () => {
+  const [path, setPath] = useState('https://shadcn-ahooks-docs.vercel.app/useExternal/bootstrap-badge.css');
+
+  const status = useExternal(path);
+
+  return (
+    <>
+      <p>
+        Status: <b>{status}</b>
+      </p>
+      <div className="bd-example" style={{ wordBreak: 'break-word' }}>
+        <span className="badge badge-pill badge-primary">Primary</span>
+        <span className="badge badge-pill badge-secondary">Secondary</span>
+        <span className="badge badge-pill badge-success">Success</span>
+        <span className="badge badge-pill badge-danger">Danger</span>
+        <span className="badge badge-pill badge-warning">Warning</span>
+        <span className="badge badge-pill badge-info">Info</span>
+        <span className="badge badge-pill badge-light">Light</span>
+        <span className="badge badge-pill badge-dark">Dark</span>
+      </div>
+      <br />
+      <button type="button" style={{ marginRight: 8 }} onClick={() => setPath('')}>
+        unload
+      </button>
+      <button
+        type="button"
+        style={{ marginRight: 8 }}
+        onClick={() => setPath('https://shadcn-ahooks-docs.vercel.app/useExternal/bootstrap-badge.css')}
+      >
+        load
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -57,13 +121,19 @@ const status = useExternal(path: string, options?: Options);
 ### Result
 
 | Params | Description                                                                                  | Type     |
-| | -- | -- |
+| ------ | -------------------------------------------------------------------------------------------- | -------- |
 | status | The progress of loading the external resources, support `unset`, `loading`, `ready`, `error` | `string` |
 
 ### Params
 
 | Params | Description                       | Type     | Default |
-| | ---- |
+| ------ | --------------------------------- | -------- | ------- |
+| path   | The url of the external resources | `string` | -       |
+
+### Options
+
+| Params         | Description                                                                                                          | Type                | Default |
+| -------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------- | ------- |
 | type           | The type of external resources which need to load, support `js`/`css`, if no type, it will deduced according to path | `string`            | -       |
 | js             | Attributes supported by `script`                                                                                     | `HTMLScriptElement` | -       |
 | css            | Attributes supported by `link`                                                                                       | `HTMLStyleElement`  | -       |

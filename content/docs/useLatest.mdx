@@ -42,7 +42,41 @@ A Hook that returns the latest value, effectively avoiding the closure problem.
 
 ### Basic usage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useLatest"
+ code={`
+import useLatest from '@/src/hooks/ahooks/useLatest';
+import React, { useState, useEffect } from 'react';
+
+const Example = () => {
+ const [count, setCount] = useState(0);
+  const [count2, setCount2] = useState(0);
+
+  const latestCountRef = useLatest(count);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(latestCountRef.current + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount2(count2 + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      <p>count(useLatest): {count}</p>
+      <p>count(default): {count2}</p>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

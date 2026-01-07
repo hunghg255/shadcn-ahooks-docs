@@ -42,7 +42,67 @@ A hook for WebSocket.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useWebSocket"
+ code={`
+import useWebSocket from '@/src/hooks/ahooks/useWebSocket';
+import React, { useRef, useMemo } from 'react';
+
+enum ReadyState {
+  Connecting = 0,
+  Open = 1,
+  Closing = 2,
+  Closed = 3,
+}
+
+
+const Example = () => {
+  const messageHistory = useRef<any[]>([]);
+
+  const { readyState, sendMessage, latestMessage, disconnect, connect } = useWebSocket(
+    'wss://ws.postman-echo.com/raw',
+  );
+
+  messageHistory.current = useMemo(
+    () => messageHistory.current.concat(latestMessage),
+    [latestMessage],
+  );
+
+  return (
+    <div>
+      {/* send message */}
+      <button
+        onClick={() => sendMessage && sendMessage(\`\${Date.now()}\`)}
+        disabled={readyState !== ReadyState.Open}
+        style={{ marginRight: 8 }}
+      >
+        ✉️ send
+      </button>
+      {/* disconnect */}
+      <button
+        onClick={() => disconnect && disconnect()}
+        disabled={readyState !== ReadyState.Open}
+        style={{ marginRight: 8 }}
+      >
+        ❌ disconnect
+      </button>
+      {/* connect */}
+      <button onClick={() => connect && connect()} disabled={readyState === ReadyState.Open}>
+        {readyState === ReadyState.Connecting ? 'connecting' : '📞 connect'}
+      </button>
+      <div style={{ marginTop: 8 }}>readyState: {readyState}</div>
+      <div style={{ marginTop: 8 }}>
+        <p>received message: </p>
+        {messageHistory.current.map((message, index) => (
+          <p key={index} style={{ wordWrap: 'break-word' }}>
+            {message?.data}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -79,14 +139,27 @@ useWebSocket(socketUrl: string, options?: Options): Result;
 ### Params
 
 | Property  | Description                    | Type      | Default |
-| | - |
+| --------- | ------------------------------ | --------- | ------- |
 | socketUrl | Required, webSocket url        | `string`  | -       |
 | options   | connect the configuration item | `Options` | -       |
 
 #### Options
 
 | Options Property  | Description                        | Type                                                                   | Default |
-| - | - | -- | |
+| ----------------- | ---------------------------------- | ---------------------------------------------------------------------- | ------- |
+| onOpen            | The webSocket connect callback     | `(event: WebSocketEventMap['open'], instance: WebSocket) => void`      | -       |
+| onClose           | WebSocket close callback           | `(event: WebSocketEventMap['close'], instance: WebSocket) => void`     | -       |
+| onMessage         | WebSocket receive message callback | `(message: WebSocketEventMap['message'], instance: WebSocket) => void` | -       |
+| onError           | WebSocket error callback           | `(event: WebSocketEventMap['error'], instance: WebSocket) => void`     | -       |
+| reconnectLimit    | Retry times                        | `number`                                                               | `3`     |
+| reconnectInterval | Retry interval(ms)                 | `number`                                                               | `3000`  |
+| manual            | Manually starts connection         | `boolean`                                                              | `false` |
+| protocols         | Sub protocols                      | `string` \| `string[]`                                                 | -       |
+
+### Result
+
+| Options Property | Description                                                                            | Type                           |
+| ---------------- | -------------------------------------------------------------------------------------- | ------------------------------ |
 | latestMessage    | Latest message                                                                         | `WebSocketEventMap['message']` |
 | sendMessage      | Send message function                                                                  | `WebSocket['send']`            |
 | disconnect       | Disconnect webSocket manually                                                          | `() => void`                   |

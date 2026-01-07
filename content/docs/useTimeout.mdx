@@ -42,8 +42,61 @@ A hook that handles the `setTimeout` timer function.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
-<code src="./demo/demo2.tsx" />
+<Preview name="useTimeout"
+ code={`
+import useTimeout from '@/src/hooks/ahooks/useTimeout';
+import React, { useState } from 'react';
+
+
+const Example = () => {
+   const [state, setState] = useState(1);
+  useTimeout(() => {
+    setState(state + 1);
+  }, 3000);
+
+  return <div>{state}</div>;
+};
+
+export default Example;`} />
+
+- Modify the delay to realize the timer timeout change and pause.
+
+<Preview name="useTimeout"
+ code={`
+import useTimeout from '@/src/hooks/ahooks/useTimeout';
+import React, { useState } from 'react';
+
+
+const Example = () => {
+   const [count, setCount] = useState(0);
+  const [delay, setDelay] = useState<number | undefined>(1000);
+
+  const clear = useTimeout(() => {
+    setCount(count + 1);
+  }, delay);
+
+  return (
+    <div>
+      <p> count: {count} </p>
+      <p style={{ marginTop: 16 }}> Delay: {delay} </p>
+      <button onClick={() => setDelay((t) => (!!t ? t + 1000 : 1000))} style={{ marginRight: 8 }}>
+        Delay + 1000
+      </button>
+      <button
+        style={{ marginRight: 8 }}
+        onClick={() => {
+          setDelay(1000);
+        }}
+      >
+        reset Delay
+      </button>
+      <button onClick={clear}>clear</button>
+    </div>
+  );
+
+};
+
+export default Example;`} />
 
 ## API
 
@@ -57,12 +110,12 @@ useTimeout(
 ### Params
 
 | Property | Description                                                                                                            | Type                    |
-| -- | -- |
+| -------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | fn       | The function to be executed after `delay` milliseconds.                                                                | `() => void`            |
 | delay    | The number of milliseconds to wait before executing the function. The timer will be cancelled if delay is `undefined`. | `number` \| `undefined` |
 
 ### Result
 
 | Property     | Description   | Type         |
-| | - | |
+| ------------ | ------------- | ------------ |
 | clearTimeout | clear timeout | `() => void` |

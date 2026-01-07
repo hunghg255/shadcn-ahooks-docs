@@ -68,7 +68,34 @@ const { data, error, loading } = useRequest(getUsername);
 
 <br />
 
-<code src="./demo/default.tsx" />
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+
+import Mock from 'mockjs';
+import React from 'react';
+
+function getUsername(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(Mock.mock('@name'));
+    }, 1000);
+  });
+}
+
+const Example = () => {
+const { data, error, loading } = useRequest(getUsername);
+
+  if (error) {
+    return <div>failed to load</div>;
+  }
+  if (loading) {
+    return <div>loading...</div>;
+  }
+  return <div>Username: {data}</div>;
+};
+
+export default Example;`} />
 
 ## Manual trigger
 
@@ -81,7 +108,48 @@ const { loading, run } = useRequest(changeUsername, {
 ```
 
 <br />
+<Preview name="useRequest" code={`
 
-<code src="./demo/manual.tsx" />
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import { useState } from 'react';
+
+function changeUsername(username: string): Promise<{ success: boolean }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true });
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+   const [state, setState] = useState('');
+
+  const { loading, run } = useRequest(changeUsername, {
+    manual: true,
+    onSuccess: (result, params) => {
+      if (result.success) {
+        setState('');
+        console.log(\`Username changed to: \${params[0]}\`);
+      }
+    },
+  });
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button disabled={loading} type="button" onClick={() => run(state)}>
+        {loading ? 'Loading' : 'Edit'}
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 In the above two examples, we demonstrated the most basic usages of `useRequest`. Next, we will introduce the features of `useRequest` one by one.

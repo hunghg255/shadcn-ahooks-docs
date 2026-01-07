@@ -53,13 +53,141 @@ If the data returned for the first request is `{ list: [1, 2, 3], nextId: 4 }`, 
 
 In the first example, we demonstrate the implementation of a most basic infinite scroll.
 
-<code src="./demo/default.tsx" />
+<Preview name="useInfiniteScroll"
+ code={`
+import useInfiniteScroll from '@/src/hooks/ahooks/useInfiniteScroll';
+import React, { useRef } from 'react';
+
+interface Result {
+  list: string[];
+  nextId: string | undefined;
+}
+
+const resultData = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+
+function getLoadMoreList(nextId: string | undefined, limit: number): Promise<Result> {
+  let start = 0;
+  if (nextId) {
+    start = resultData.findIndex((i) => i === nextId);
+  }
+  const end = start + limit;
+  const list = resultData.slice(start, end);
+  const nId = resultData.length >= end ? resultData[end] : undefined;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        list,
+        nextId: nId,
+      });
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+  const { data, loading, loadMore, loadingMore } = useInfiniteScroll((d) =>
+    getLoadMoreList(d?.nextId, 4),
+  );
+
+  return (
+    <div>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          {data?.list?.map((item) => (
+            <div key={item} style={{ padding: 12, border: '1px solid #f5f5f5' }}>
+              item-{item}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 8 }}>
+        {data?.nextId && (
+          <button type="button" onClick={loadMore} disabled={loadingMore}>
+            {loadingMore ? 'Loading more...' : 'Click to load more'}
+          </button>
+        )}
+
+        {!data?.nextId && <span>No more data</span>}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## Pagination
 
 In the data fixation scenario, we sometimes use `page` and `pageSize` to request new data.
 
-<code src="./demo/pagination.tsx" />
+
+<Preview name="useInfiniteScroll"
+ code={`
+import useInfiniteScroll from '@/src/hooks/ahooks/useInfiniteScroll';
+import React, { useRef } from 'react';
+
+interface Result {
+  list: string[];
+  total: number;
+}
+
+const resultData = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+
+function getLoadMoreList(page: number, pageSize: number): Promise<Result> {
+  const start = (page - 1) * pageSize;
+  const end = page * pageSize;
+  const list = resultData.slice(start, end);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        list,
+        total: resultData.length,
+      });
+    }, 1000);
+  });
+}
+
+const PAGE_SIZE = 4;
+
+const Example = () => {
+ const { data, loading, loadMore, loadingMore } = useInfiniteScroll((d) => {
+    const page = d ? Math.ceil(d.list.length / PAGE_SIZE) + 1 : 1;
+    return getLoadMoreList(page, PAGE_SIZE);
+  });
+
+  const hasMore = data && data.list.length < data.total;
+
+  return (
+    <div>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          {data?.list?.map((item) => (
+            <div key={item} style={{ padding: 12, border: '1px solid #f5f5f5' }}>
+              item-{item}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 8 }}>
+        {hasMore && (
+          <button type="button" onClick={loadMore} disabled={loadingMore}>
+            {loadingMore ? 'Loading more...' : 'Click to load more'}
+          </button>
+        )}
+
+        {!hasMore && <span>No more data</span>}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## Scrolling to automatically load
 
@@ -70,16 +198,264 @@ In the infinite scrolling scenario, the most common case is to automatically loa
 - `options.direction` determines the direction of scrolling, the default is `bottom`
 
 the scroll to bottom demo
-<code src="./demo/scroll.tsx" />
+
+<Preview name="useInfiniteScroll"
+ code={`
+import useInfiniteScroll from '@/src/hooks/ahooks/useInfiniteScroll';
+import React, { useRef } from 'react';
+
+
+interface Result {
+  list: string[];
+  nextId: string | undefined;
+}
+
+const resultData = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+
+function getLoadMoreList(nextId: string | undefined, limit: number): Promise<Result> {
+  let start = 0;
+  if (nextId) {
+    start = resultData.findIndex((i) => i === nextId);
+  }
+  const end = start + limit;
+  const list = resultData.slice(start, end);
+  const nId = resultData.length >= end ? resultData[end] : undefined;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        list,
+        nextId: nId,
+      });
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const { data, loading, loadMore, loadingMore, noMore } = useInfiniteScroll(
+    (d) => getLoadMoreList(d?.nextId, 4),
+    {
+      target: ref,
+      isNoMore: (d) => d?.nextId === undefined,
+    },
+  );
+
+  return (
+    <div ref={ref} style={{ height: 150, overflow: 'auto', border: '1px solid', padding: 12 }}>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          {data?.list?.map((item) => (
+            <div key={item} style={{ padding: 12, border: '1px solid #f5f5f5' }}>
+              item-{item}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 8 }}>
+        {!noMore && (
+          <button type="button" onClick={loadMore} disabled={loadingMore}>
+            {loadingMore ? 'Loading more...' : 'Click to load more'}
+          </button>
+        )}
+
+        {noMore && <span>No more data</span>}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 the scroll to top demo
-<code src="./demo/scrollTop.tsx" />
+
+
+<Preview name="useInfiniteScroll"
+ code={`
+import useInfiniteScroll from '@/src/hooks/ahooks/useInfiniteScroll';
+import React, { useRef } from 'react';
+
+
+interface Result {
+  list: string[];
+  nextId: string | undefined;
+}
+
+const resultData = [
+  '15',
+  '14',
+  '13',
+  '12',
+  '11',
+  '10',
+  '9',
+  '8',
+  '7',
+  '6',
+  '5',
+  '4',
+  '3',
+  '2',
+  '1',
+  '0',
+];
+
+function getLoadMoreList(nextId: string | undefined, limit: number): Promise<Result> {
+  let start = 0;
+  if (nextId) {
+    start = resultData.findIndex((i) => i === nextId);
+  }
+  const end = start + limit;
+  const list = resultData.slice(start, end).reverse();
+  const nId = resultData.length >= end ? resultData[end] : undefined;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        list,
+        nextId: nId,
+      });
+    }, 1000);
+  });
+}
+
+const Example = () => {
+   const ref = useRef<HTMLDivElement>(null);
+  const isFirstIn = useRef(true);
+
+  const { data, loading, loadMore, loadingMore, noMore } = useInfiniteScroll(
+    (d) => getLoadMoreList(d?.nextId, 5),
+    {
+      target: ref,
+      direction: 'top',
+      threshold: 0,
+      isNoMore: (d) => d?.nextId === undefined,
+      onSuccess() {
+        if (isFirstIn.current) {
+          isFirstIn.current = false;
+          setTimeout(() => {
+            const el = ref.current;
+            if (el) {
+              el.scrollTo(0, 999999);
+            }
+          });
+        }
+      },
+    },
+  );
+
+  return (
+    <div ref={ref} style={{ height: 150, overflow: 'auto', border: '1px solid', padding: 12 }}>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          <div style={{ marginBottom: 10 }}>
+            {!noMore && (
+              <button type="button" onClick={loadMore} disabled={loadingMore}>
+                {loadingMore ? 'Loading more...' : 'Click to load more'}
+              </button>
+            )}
+
+            {noMore && <span>No more data</span>}
+          </div>
+          {data?.list?.map((item) => (
+            <div key={item} style={{ padding: 12, border: '1px solid #f5f5f5' }}>
+              item-{item}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## Data reset
 
 The data can be reset by `reload`. The following example shows that after the `filter` changes, the data is reset to the first page.
 
-<code src="./demo/reload.tsx" />
+
+<Preview name="useInfiniteScroll"
+ code={`
+import useInfiniteScroll from '@/src/hooks/ahooks/useInfiniteScroll';
+import React, { useState } from 'react';
+
+
+interface Result {
+  list: string[];
+  nextId: string | undefined;
+}
+
+const resultData = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+
+function getLoadMoreList(
+  nextId: string | undefined,
+  limit: number,
+  keyword: string,
+): Promise<Result> {
+  let start = 0;
+  if (nextId) {
+    start = resultData.findIndex((i) => i === nextId);
+  }
+  const end = start + limit;
+  const list = resultData.slice(start, end);
+  const nId = resultData.length >= end ? resultData[end] : undefined;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        list,
+        nextId: nId,
+      });
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  const [keyword, setKeyword] = useState('');
+
+  const { data, loading, loadMore, loadingMore, reload } = useInfiniteScroll((d) =>
+    getLoadMoreList(d?.nextId, 4, keyword),
+  );
+
+  return (
+    <div>
+      <div style={{ marginBottom: 16 }}>
+        <input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+        <button style={{ marginLeft: 8 }} onClick={reload}>
+          Filter
+        </button>
+      </div>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          {data?.list?.map((item) => (
+            <div key={item} style={{ padding: 12, border: '1px solid #f5f5f5' }}>
+              item-{item}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 8 }}>
+        {data?.nextId && (
+          <button type="button" onClick={loadMore} disabled={loadingMore}>
+            {loadingMore ? 'Loading more...' : 'Click to load more'}
+          </button>
+        )}
+
+        {!data?.nextId && <span>No more data</span>}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 The above code can be implemented with `reloadDeps` syntax sugar. When `reloadDeps` changes, `reload` will be triggered automatically.
 
@@ -93,7 +469,103 @@ const result = useInfiniteScroll(service, {
 
 With `mutate`, we can directly modify the current `data`. The following example demonstrates deleting a record from the data.
 
-<code src="./demo/mutate.tsx" />
+
+
+<Preview name="useInfiniteScroll"
+registryDependencies={['useRequest']}
+ code={`
+import useInfiniteScroll from '@/src/hooks/ahooks/useInfiniteScroll';
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import React, { useState } from 'react';
+
+interface Result {
+  list: string[];
+  nextId: string | undefined;
+}
+
+const resultData = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+
+function getLoadMoreList(nextId: string | undefined, limit: number): Promise<Result> {
+  let start = 0;
+  if (nextId) {
+    start = resultData.findIndex((i) => i === nextId);
+  }
+  const end = start + limit;
+  const list = resultData.slice(start, end);
+  const nId = resultData.length >= end ? resultData[end] : undefined;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        list,
+        nextId: nId,
+      });
+    }, 1000);
+  });
+}
+
+function deleteItem(id: string) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  const { data, loading, loadMore, loadingMore, mutate } = useInfiniteScroll((d) =>
+    getLoadMoreList(d?.nextId, 4),
+  );
+
+  const {
+    loading: deleteLading,
+    params: deleteParams,
+    run: remove,
+  } = useRequest(deleteItem, {
+    manual: true,
+    onSuccess: (_, [id]) => {
+      if (data) {
+        const index = data.list.findIndex((i) => i === id);
+        data?.list.splice(index, 1);
+        mutate({ ...data });
+      }
+    },
+  });
+
+  return (
+    <div>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <div>
+          {data?.list?.map((item) => (
+            <div key={item} style={{ padding: 12, border: '1px solid #f5f5f5' }}>
+              item-{item}
+              <button
+                style={{ marginLeft: 8 }}
+                onClick={() => remove(item)}
+                disabled={deleteLading && deleteParams[0] === item}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop: 8 }}>
+        {data?.nextId && (
+          <button type="button" onClick={loadMore} disabled={loadingMore}>
+            {loadingMore ? 'Loading more...' : 'Click to load more'}
+          </button>
+        )}
+
+        {!data?.nextId && <span>No more data</span>}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -132,7 +604,7 @@ const {
 ### Result
 
 | Property      | Description                                                                                                                                       | Type                     |
-| - | - | |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
 | data          | The data returned by the service, where the `list` attribute is the aggregated data                                                               | `TData` \| `undefined`   |
 | loading       | Is the first request in progress                                                                                                                  | `boolean`                |
 | loadingMore   | Is more data request in progress                                                                                                                  | `boolean`                |
@@ -148,7 +620,7 @@ const {
 ### Options
 
 | Property   | Description                                                                                                                                                                                                                                          | Type                                                        | Default  |
-| - | ----- |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | -------- |
 | target     | specifies the parent element. If it exists, it will trigger the `loadMore` when scrolling to the bottom. Needs to work with `isNoMore` to know when there is no more data to load. **when target is document, it is defined as the entire viewport** | `() => Element` \| `Element` \| `MutableRefObject<Element>` | -        |
 | isNoMore   | determines if there is no more data, the input parameter is the latest merged `data`                                                                                                                                                                 | `(data?: TData) => boolean`                                 | -        |
 | threshold  | The pixel threshold to the bottom for the scrolling to load                                                                                                                                                                                          | `number`                                                    | `100`    |

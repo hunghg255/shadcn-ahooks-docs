@@ -42,15 +42,153 @@ A hook to manage state change history. It provides encapsulation methods to trav
 
 ### Basic usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useHistoryTravel"
+ code={`
+import useHistoryTravel from '@/src/hooks/ahooks/useHistoryTravel';
+
+const Example = () => {
+  const { value, setValue, backLength, forwardLength, back, forward } = useHistoryTravel<string>();
+
+  return (
+    <div>
+      <input value={value || ''} onChange={(e) => setValue(e.target.value)} />
+      <button disabled={backLength <= 0} onClick={back} style={{ margin: '0 8px' }}>
+        back
+      </button>
+      <button disabled={forwardLength <= 0} onClick={forward}>
+        forward
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Todo List
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useHistoryTravel"
+ code={`
+import useHistoryTravel from '@/src/hooks/ahooks/useHistoryTravel';
+import React, { useState } from 'react';
+
+const Example = () => {
+ const {
+    value = [],
+    setValue,
+    backLength,
+    forwardLength,
+    back,
+    forward,
+    go,
+    reset,
+  } = useHistoryTravel(['do homework']);
+
+  const [inputValue, setInputValue] = useState('');
+  const [step, setStep] = useState(-1);
+
+  const onAdd = () => {
+    setValue([...value, inputValue]);
+    setInputValue('');
+  };
+
+  const onGo = () => {
+    go(step);
+    setStep(0);
+  };
+
+  const onReset = () => {
+    reset();
+    setStep(0);
+    setInputValue('');
+  };
+
+  return (
+    <div>
+      <div style={{ border: '1px solid #ebedf1', padding: 16, marginBottom: 16 }}>
+        <h3>TODO List</h3>
+        <ul>
+          {value.map((it, index) => (
+            <li key={index}>{it}</li>
+          ))}
+        </ul>
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Please enter TODO name"
+          style={{ width: 200, marginRight: 8 }}
+        />
+        <button type="button" onClick={onAdd} style={{ marginRight: 8 }}>
+          Add TODO
+        </button>
+        <button type="button" disabled={backLength <= 0} onClick={back} style={{ marginRight: 8 }}>
+          Undo
+        </button>
+        <button
+          type="button"
+          disabled={forwardLength <= 0}
+          onClick={forward}
+          style={{ marginRight: 8 }}
+        >
+          Redo
+        </button>
+        <button type="button" disabled={!backLength && !forwardLength} onClick={onReset}>
+          Reset
+        </button>
+      </div>
+      <div>
+        <input
+          type="number"
+          value={step}
+          onChange={(e) => setStep(e.target.value as any)}
+          max={forwardLength}
+          min={backLength * -1}
+          style={{ marginRight: 8, width: 60 }}
+        />
+        <button type="button" onClick={onGo}>
+          Go
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Limit maximum history length
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useHistoryTravel"
+ code={`
+import useHistoryTravel from '@/src/hooks/ahooks/useHistoryTravel';
+
+const Example = () => {
+   const maxLength = 3;
+  const { value, setValue, backLength, forwardLength, back, forward } = useHistoryTravel<string>(
+    '',
+    maxLength,
+  );
+
+  return (
+    <div>
+      <div>maxLength: {maxLength}</div>
+      <div>backLength: {backLength}</div>
+      <div>forwardLength: {forwardLength}</div>
+      <input value={value || ''} onChange={(e) => setValue(e.target.value)} />
+      <button disabled={backLength <= 0} onClick={back} style={{ margin: '0 8px' }}>
+        back
+      </button>
+      <button disabled={forwardLength <= 0} onClick={forward}>
+        forward
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -69,7 +207,14 @@ const {
 ### Params
 
 | Property     | Description                                                                                                               | Type     | Default     |
-| | - | -- | | - |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
+| initialValue | Optional initial value                                                                                                    | `T`      | -           |
+| maxLength    | Optional limit the maximum length of history records. If the maximum length is exceeded, the first record will be deleted | `number` | 0 unlimited |
+
+### Result
+
+| Property      | Description                                                                       | Type                            |
+| ------------- | --------------------------------------------------------------------------------- | ------------------------------- |
 | value         | Current value                                                                     | `T`                             |
 | setValue      | Set value                                                                         | `(value: T) => void`            |
 | backLength    | The length of backward history                                                    | `number`                        |

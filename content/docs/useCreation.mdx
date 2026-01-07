@@ -53,7 +53,40 @@ const b = useCreation(() => new Subject(), []); // By using factory function, Su
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useCreation"
+ code={`
+import React, { useState } from 'react';
+import useCreation from '@/src/hooks/ahooks/useCreation';
+
+class Foo {
+  constructor() {
+    this.data = Math.random();
+  }
+
+  data: number;
+}
+
+const Example = () => {
+  const foo = useCreation(() => new Foo(), []);
+  const [, setFlag] = useState({});
+  return (
+    <>
+      <p>{foo.data}</p>
+      <button
+        type="button"
+        onClick={() => {
+          setFlag({});
+        }}
+      >
+        Rerender
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -64,6 +97,6 @@ function useCreation<T>(factory: () => T, deps: any[]): T;
 ### Params
 
 | Property | Description                              | Type        | Default |
-| -- | -- | - |
+| -------- | ---------------------------------------- | ----------- | ------- |
 | factory  | A function used for creating the object. | `() => any` | -       |
 | deps     | The dependencies list.                   | `any[]`     | -       |

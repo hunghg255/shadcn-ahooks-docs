@@ -42,27 +42,189 @@ Listen for click events outside the target element.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useClickAway"
+ code={`
+import React, { useState, useRef } from 'react';
+import useClickAway from '@/src/hooks/ahooks/useClickAway';
+
+const Example = () => {
+    const [counter, setCounter] = useState(0);
+  const ref = useRef<HTMLButtonElement>(null);
+  useClickAway(() => {
+    setCounter((s) => s + 1);
+  }, ref);
+
+  return (
+    <div>
+      <button ref={ref} type="button">
+        box
+      </button>
+      <p>counter: {counter}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Custom DOM
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useClickAway"
+ code={`
+import React, { useState, useRef } from 'react';
+import useClickAway from '@/src/hooks/ahooks/useClickAway';
+
+const Example = () => {
+  const [counter, setCounter] = useState(0);
+
+  useClickAway(
+    () => {
+      setCounter((s) => s + 1);
+    },
+    () => document.getElementById('use-click-away-button'),
+  );
+
+  return (
+    <div>
+      <button type="button" id="use-click-away-button">
+        box
+      </button>
+      <p>counter: {counter}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Support multiple DOM
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useClickAway"
+ code={`
+import React, { useState, useRef } from 'react';
+import useClickAway from '@/src/hooks/ahooks/useClickAway';
+
+const Example = () => {
+const [counter, setCounter] = useState(0);
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  useClickAway(() => {
+    setCounter((s) => s + 1);
+  }, [ref1, ref2]);
+
+  return (
+    <div>
+      <button type="button" ref={ref1}>
+        box1
+      </button>
+      <button type="button" ref={ref2} style={{ marginLeft: 16 }}>
+        box2
+      </button>
+      <p>counter: {counter}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Listen for other events
 
-<code src="./demo/demo4.tsx" />
+- By setting eventName, you can specify the event to be listened, Try click the right mouse.
+
+
+<Preview name="useClickAway"
+ code={`
+import React, { useState, useRef } from 'react';
+import useClickAway from '@/src/hooks/ahooks/useClickAway';
+
+const Example = () => {
+const [counter, setCounter] = useState(0);
+  const ref = useRef<HTMLButtonElement>(null);
+  useClickAway(
+    () => {
+      setCounter((s) => s + 1);
+    },
+    ref,
+    'contextmenu',
+  );
+
+  return (
+    <div>
+      <button ref={ref} type="button">
+        box
+      </button>
+      <p>counter: {counter}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Support multiple events
 
-<code src="./demo/demo5.tsx"/>
+<Preview name="useClickAway"
+ code={`
+import React, { useState, useRef } from 'react';
+import useClickAway from '@/src/hooks/ahooks/useClickAway';
+
+const Example = () => {
+  const [counter, setCounter] = useState(0);
+  const ref = useRef(null);
+  useClickAway(
+    () => {
+      setCounter((s) => s + 1);
+    },
+    ref,
+    ['click', 'contextmenu'],
+  );
+
+  return (
+    <div>
+      <button type="button" ref={ref}>
+        box
+      </button>
+      <p>counter: {counter}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Support shadow DOM
 
-<code src="./demo/demo6.tsx"/>
+<Preview name="useClickAway"
+externalDependencies={['react-shadow', 'prop-types']}
+ code={`
+import React, { useState, useRef } from 'react';
+import useClickAway from '@/src/hooks/ahooks/useClickAway';
+import root from 'react-shadow';
+
+const Example = () => {
+ const [counter, setCounter] = useState(0);
+  const ref = useRef(null);
+  useClickAway(
+    () => {
+      setCounter((s) => s + 1);
+    },
+    ref,
+    ['click', 'contextmenu'],
+  );
+
+  return (
+    <root.div>
+      <div>
+        <button type="button" ref={ref}>
+          box
+        </button>
+        <p>counter: {counter}</p>
+      </div>
+    </root.div>
+  );
+};
+
+export default Example;`} />
+
+
 
 ## API
 
@@ -80,7 +242,7 @@ useClickAway<T extends Event = Event>(
 ### Params
 
 | Property    | Description                                    | Type                                       | Default |
-| - | | - |
+| ----------- | ---------------------------------------------- | ------------------------------------------ | ------- |
 | onClickAway | Trigger Function                               | `(event: T) => void`                       | -       |
 | target      | DOM elements or Ref or Function, support array | `Target` \| `Target[]`                     | -       |
 | eventName   | Set the event to be listened, support array    | `DocumentEventKey` \| `DocumentEventKey[]` | `click` |

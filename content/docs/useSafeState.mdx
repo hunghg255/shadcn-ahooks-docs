@@ -42,7 +42,37 @@ It is exactly the same with `React.useState` , but after the component is unmoun
 
 ### Basic usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useSafeState"
+ code={`
+import useSafeState from '@/src/hooks/ahooks/useSafeState';
+import React, { useEffect, useState } from 'react';
+
+const Child = () => {
+  const [value, setValue] = useSafeState<string>();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setValue('data loaded from server');
+    }, 5000);
+  }, []);
+
+  const text = value || 'Loading...';
+
+  return <div>{text}</div>;
+};
+
+const Example = () => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <div>
+      <button onClick={() => setVisible(false)}>Unmount</button>
+      {visible && <Child />}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

@@ -42,7 +42,32 @@ A hook that deal with the throttled function.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useThrottleFn"
+ code={`
+import useThrottleFn from '@/src/hooks/ahooks/useThrottleFn';
+import React, { useState } from 'react';
+
+
+const Example = () => {
+const [value, setValue] = useState(0);
+  const { run } = useThrottleFn(
+    () => {
+      setValue(value + 1);
+    },
+    { wait: 500 },
+  );
+
+  return (
+    <div>
+      <p style={{ marginTop: 16 }}> Clicked count: {value} </p>
+      <button type="button" onClick={run}>
+        Click fast!
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -60,7 +85,22 @@ const {
 ### Params
 
 | Property | Description                       | Type                      | Default |
-| -- | -- | ---- |
+| -------- | --------------------------------- | ------------------------- | ------- |
+| fn       | The function to throttle.         | `(...args: any[]) => any` | -       |
+| options  | Config for the throttle behaviors | `Options`                 | -       |
+
+### Options
+
+| Property | Description                                           | Type      | Default |
+| -------- | ----------------------------------------------------- | --------- | ------- |
+| wait     | The number of milliseconds to delay.                  | `number`  | `1000`  |
+| leading  | Specify invoking on the leading edge of the timeout.  | `boolean` | `true`  |
+| trailing | Specify invoking on the trailing edge of the timeout. | `boolean` | `true`  |
+
+### Result
+
+| Property | Description                                            | Type                      |
+| -------- | ------------------------------------------------------ | ------------------------- |
 | run      | Invoke and pass parameters to fn.                      | `(...args: any[]) => any` |
 | cancel   | Cancel the invocation of currently throttled function. | `() => void`              |
 | flush    | Immediately invoke currently throttled function        | `() => void`              |

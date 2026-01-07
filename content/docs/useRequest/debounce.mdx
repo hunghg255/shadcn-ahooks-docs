@@ -19,7 +19,45 @@ As in the example code above, if `run` is triggered frequently, it will only wai
 
 You can quickly enter text in the input box below to experience the effect
 
-<code src="./demo/debounce.tsx" />
+<Preview name="useRequest"
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import Mock from 'mockjs';
+import React from 'react';
+
+async function getEmail(search?: string): Promise<string[]> {
+  console.log('debounce getEmail', search);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(Mock.mock({ 'data|5': ['@email'] }).data);
+    }, 300);
+  });
+}
+const Example = () => {
+  const { data, loading, run } = useRequest(getEmail, {
+    debounceWait: 1000,
+    manual: true,
+  });
+
+  return (
+    <div>
+      <input placeholder="Search Emails" onChange={(e) => run(e.target.value)} />
+      {loading ? (
+        <p>loading</p>
+      ) : (
+        <ul style={{ marginTop: 8 }}>
+          {data?.map((i) => (
+            <li key={i}>{i}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -33,9 +71,10 @@ The usage and effect of all debounce property are the same as [lodash.debounce](
 | debounceLeading  | Execute the request before the delay starts                                  | `boolean` | `false`       |
 | debounceTrailing | Execute the request after the delay ends                                     | `boolean` | `true`        |
 | debounceMaxWait  | The maximum time request is allowed to be delayed before it’s executed       | `number`  | -             |
+| pollingIntervalWhen | pollingIntervalWhen is used together with debounce options, it specifies when to start polling | `(data, params) => number \| boolean` | - |
 
 ## Remark
 
-- `options.debounceWait`, `options.debounceLeading`, `options.debounceTrailing`, `options.debounceMaxWait` support dynamic changes.
+- `options.debounceWait`, `options.debounceLeading`, `options.debounceTrailing`, `options.debounceMaxWait`, `options.pollingIntervalWhen` support dynamic changes.
 - `runAsync` will return a `Promise` when it is actually executed. When it is not executed, there will be no return.
 - `cancel` can abort a function waiting to be executed.

@@ -42,7 +42,39 @@ Add lock to an async function to prevent parallel executions.
 
 ### Basic usage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useLockFn"
+ code={`
+import useLockFn from '@/src/hooks/ahooks/useLockFn';
+import React, { useState } from 'react';
+
+function mockApiRequest() {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  });
+}
+
+const Example = () => {
+ const [count, setCount] = useState(0);
+
+  const submit = useLockFn(async () => {
+    console.log('Start to submit');
+    await mockApiRequest();
+    setCount((val) => val + 1);
+    console.log('Submit finished');
+  });
+
+  return (
+    <>
+      <p>Submit count: {count}</p>
+      <button onClick={submit}>Submit</button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -55,11 +87,11 @@ function useLockFn<P extends any[] = any[], V = any>(
 ### Result
 
 | Property | Description                  | Type                               |
-| -- | - |
+| -------- | ---------------------------- | ---------------------------------- |
 | fn       | The async function with lock | `(...args: any[]) => Promise<any>` |
 
 ### Params
 
 | Property | Description       | Type                               | Default |
-| -- | - | - |
+| -------- | ----------------- | ---------------------------------- | ------- |
 | fn       | An async function | `(...args: any[]) => Promise<any>` | -       |

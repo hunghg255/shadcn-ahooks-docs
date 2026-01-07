@@ -42,11 +42,56 @@ A hook that encapsulates `onChange` and `value` logic for form controls that obt
 
 ### Basic Usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useEventTarget"
+ code={`
+import useEventTarget from '@/src/hooks/ahooks/useEventTarget';
+
+const Example = () => {
+ const [value, { reset, onChange }] = useEventTarget({ initialValue: 'this is initial value' });
+
+  return (
+    <div>
+      <input value={value} onChange={onChange} style={{ width: 200, marginRight: 20 }} />
+      <button type="button" onClick={reset}>
+        reset
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Custom transformer
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useEventTarget"
+ code={`
+import useEventTarget from '@/src/hooks/ahooks/useEventTarget';
+
+const Example = () => {
+ const [value, { onChange, reset }] = useEventTarget({
+    initialValue: '',
+    transformer: (val: string) => val.replace(/[^\d]/g, ''),
+  });
+
+  return (
+    <div>
+      <input
+        value={value}
+        onChange={onChange}
+        style={{ width: 200, marginRight: 20 }}
+        placeholder="Please type here"
+      />
+      <button type="button" onClick={reset}>
+        reset
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
+
+
 
 ## API
 
@@ -57,6 +102,14 @@ const [value, { onChange, reset }] = useEventTarget<T, U>(Options<T, U>);
 ### Result
 
 | Property | Description                                 | Type                                    |
-| -- | - | -- | - |
+| -------- | ------------------------------------------- | --------------------------------------- |
+| value    | component value                             | `T`                                     |
+| onChange | callback when value changes                 | `(e: { target: { value: T } }) => void` |
+| reset    | function to reset the value to initialValue | `() => void`                            |
+
+### Options
+
+| Property     | Description                                | Type              | Default |
+| ------------ | ------------------------------------------ | ----------------- | ------- |
 | initialValue | initial value                              | `T`               | -       |
 | transformer  | custom transform function applied to value | `(value: U) => T` | -       |

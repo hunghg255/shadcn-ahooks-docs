@@ -42,7 +42,54 @@ A hook that manage counter.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useCounter"
+ code={`
+
+import useCounter from '@/src/hooks/ahooks/useCounter';
+
+const Example = () => {
+ const [current, { inc, dec, set, reset }] = useCounter(100, { min: 1, max: 10 });
+
+  return (
+    <div>
+      <p>{current} [max: 10; min: 1;]</p>
+      <div>
+        <button
+          type="button"
+          onClick={() => {
+            inc();
+          }}
+          style={{ marginRight: 8 }}
+        >
+          inc()
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            dec();
+          }}
+          style={{ marginRight: 8 }}
+        >
+          dec()
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            set(3);
+          }}
+          style={{ marginRight: 8 }}
+        >
+          set(3)
+        </button>
+        <button type="button" onClick={reset} style={{ marginRight: 8 }}>
+          reset()
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -58,7 +105,7 @@ const [current, {
 ### Result
 
 | Property | Description                          | Type                                                   |
-| -- | | |
+| -------- | ------------------------------------ | ------------------------------------------------------ |
 | current  | Current value                        | `number`                                               |
 | inc      | Increment, default delta is 1        | `(delta?: number) => void`                             |
 | dec      | Decrement, default delta is 1        | `(delta?: number) => void`                             |
@@ -68,7 +115,7 @@ const [current, {
 ### Params
 
 | Property     | Description   | Type     | Default |
-| | - | -- | - |
+| ------------ | ------------- | -------- | ------- |
 | initialValue | Initial count | `number` | `0`     |
 | min          | Min count     | `number` | -       |
 | max          | Max count     | `number` | -       |

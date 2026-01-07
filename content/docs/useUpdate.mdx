@@ -42,7 +42,25 @@ A hook that returns a function which can be used to force the component to re-re
 
 ### Default Usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useUpdate"
+ code={`
+import useUpdate from '@/src/hooks/ahooks/useUpdate';
+
+
+const Example = () => {
+   const update = useUpdate();
+
+  return (
+    <>
+      <div>Time: {Date.now()}</div>
+      <button type="button" onClick={update} style={{ marginTop: 8 }}>
+        update
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

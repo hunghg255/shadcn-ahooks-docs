@@ -18,13 +18,111 @@ Next, through a few examples to experience these features.
 
 In the following example, we set the `cacheKey`. When the component is loaded for the second time, the cached content will be returned first, and then the request will be re-run in background. You can experience the effect by clicking the button.
 
-<code src="./demo/cacheKey.tsx" />
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import Mock from 'mockjs';
+import React from 'react';
+
+const getArticle = async () => {
+  return new Promise<{ data: string; time: number }>((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: Mock.mock('@paragraph'),
+        time: Date.now(),
+      });
+    }, 1000);
+  });
+};
+
+const Article: React.FC = () => {
+  const { data, loading } = useRequest(getArticle, {
+    cacheKey: 'cacheKey-demo',
+  });
+  if (!data && loading) {
+    return <p>Loading</p>;
+  }
+  return (
+    <>
+      <p>Background loading: {loading ? 'true' : 'false'}</p>
+      <p>Latest request time: {data?.time}</p>
+      <p>{data?.data}</p>
+    </>
+  );
+};
+
+const Example = () => {
+   const [state, { toggle }] = useBoolean();
+  return (
+    <div>
+      <button type="button" onClick={() => toggle()}>
+        show/hidden
+      </button>
+      {state && <Article />}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Keep your data fresh
 
 By setting `staleTime`, we can specify the data retention time, during which time the request will not be re-run. The following example sets a fresh time of 5s, you can experience the effect by clicking the button
 
-<code src="./demo/staleTime.tsx" />
+
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import Mock from 'mockjs';
+import React from 'react';
+
+const getArticle = async () => {
+  return new Promise<{ data: string; time: number }>((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: Mock.mock('@paragraph'),
+        time: Date.now(),
+      });
+    }, 1000);
+  });
+};
+
+const Article: React.FC = () => {
+   const { data, loading } = useRequest(getArticle, {
+    cacheKey: 'staleTime-demo',
+    staleTime: 5000,
+  });
+  if (!data && loading) {
+    return <p>Loading</p>;
+  }
+  return (
+    <>
+      <p>Background loading: {loading ? 'true' : 'false'}</p>
+      <p>Latest request time: {data?.time}</p>
+      <p>{data?.data}</p>
+    </>
+  );
+};
+
+const Example = () => {
+   const [state, { toggle }] = useBoolean();
+  return (
+    <div>
+      <button type="button" onClick={() => toggle()}>
+        show/hidden
+      </button>
+      {state && <Article />}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Data sharing
 
@@ -37,7 +135,61 @@ The content of the same `cacheKey` is shared globally, which will bring the foll
 
 In the following example, the two components will only initiate one request during initialization. And the content of the two articles is always synchronized.
 
-<code src="./demo/share.tsx" />
+
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import Mock from 'mockjs';
+import React from 'react';
+
+const getArticle = async () => {
+  console.log('cacheKey-share');
+  return new Promise<{ data: string; time: number }>((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: Mock.mock('@paragraph'),
+        time: Date.now(),
+      });
+    }, 3000);
+  });
+};
+
+const Article = () => {
+  const { data, loading, refresh } = useRequest(getArticle, {
+    cacheKey: 'cacheKey-share',
+  });
+  if (!data && loading) {
+    return <p>Loading</p>;
+  }
+  return (
+    <>
+      <p>Background loading: {loading ? 'true' : 'false'}</p>
+      <p>
+        <button onClick={refresh} type="button">
+          更新
+        </button>
+      </p>
+      <p>Latest request time: {data?.time}</p>
+      <p>{data?.data}</p>
+    </>
+  );
+};
+
+const Example = () => {
+  return (
+    <div>
+      <h2>Article 1</h2>
+      <Article />
+      <h2>Article 2</h2>
+      <Article />
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Parameters cache
 
@@ -45,13 +197,156 @@ The cached data includes `data` and `params`. Through the `params` caching mecha
 
 In the following example, we can initialize the `keyword` from the cached `params`
 
-<code src="./demo/params.tsx" />
+
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+
+const getArticle = async (keyword: string) => {
+  console.log('cacheKey', keyword);
+  return new Promise<{ data: string; time: number }>((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: Mock.mock('@paragraph'),
+        time: Date.now(),
+      });
+    }, 1000);
+  });
+};
+
+const Article = () => {
+  const { data, params, loading, run } = useRequest(getArticle, {
+    cacheKey: 'cacheKey-demo',
+  });
+
+  const [keyword, setKeyword] = useState(params[0] || '');
+
+  if (!data && loading) {
+    return <p>Loading</p>;
+  }
+  return (
+    <>
+      <div>
+        <input
+          style={{ width: 300 }}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+        <button
+          style={{ marginLeft: 8 }}
+          onClick={() => {
+            run(keyword);
+          }}
+        >
+          Get
+        </button>
+      </div>
+      <p>Background loading: {loading ? 'true' : 'false'}</p>
+      <p>Latest request time: {data?.time}</p>
+      <p>Keyword: {keyword}</p>
+      <p>{data?.data}</p>
+    </>
+  );
+};
+
+const Example = () => {
+const [state, { toggle }] = useBoolean();
+  return (
+    <div>
+      <button type="button" onClick={() => toggle()} style={{ marginBottom: 16 }}>
+        show/hidden
+      </button>
+      {state && <Article />}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Clear cache
 
 ahooks provides a `clearCache` method, which can clear the cache data of the specified `cacheKey`.
 
-<code src="./demo/clearCache.tsx" />
+
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest, { clearCache } from '@/src/hooks/ahooks/useRequest';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+
+const getArticle = async () => {
+  return new Promise<{ data: string; time: number }>((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: Mock.mock('@paragraph'),
+        time: Date.now(),
+      });
+    }, 3000);
+  });
+};
+
+const Article = ({ cacheKey }) => {
+  const { data, loading } = useRequest(getArticle, {
+    cacheKey,
+  });
+  if (!data && loading) {
+    return <p>Loading</p>;
+  }
+  return (
+    <>
+      <p>Background loading: {loading ? 'true' : 'false'}</p>
+      <p>Latest request time: {data?.time}</p>
+      <p>{data?.data}</p>
+    </>
+  );
+};
+
+const clear = (cacheKey?: string | string[]) => {
+  clearCache(cacheKey);
+  const tips = Array.isArray(cacheKey) ? cacheKey.join('、') : cacheKey;
+  console.log(\`Clear \${tips ?? 'All'} finished\`);
+};
+
+const Example = () => {
+const [state, { toggle }] = useBoolean();
+  return (
+    <div>
+      <p>
+        <button type="button" onClick={() => toggle()}>
+          show/hidden
+        </button>
+      </p>
+      <p>
+        <button style={{ marginRight: 8 }} onClick={() => clear('Article1')}>
+          Clear Article1
+        </button>
+        <button style={{ marginRight: 8 }} onClick={() => clear('Article2')}>
+          Clear Article2
+        </button>
+        <button style={{ marginRight: 8 }} onClick={() => clear(['Article2', 'Article3'])}>
+          Clear Article2 and Article3
+        </button>
+        <button onClick={() => clear()}>Clear All</button>
+      </p>
+      <h2>Article 1</h2>
+      {state && <Article cacheKey="Article1" />}
+      <h2>Article 2</h2>
+      {state && <Article cacheKey="Article2" />}
+      <h2>Article 3</h2>
+      {state && <Article cacheKey="Article3" />}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Custom cache
 
@@ -62,7 +357,61 @@ Please note:
 1. `setCache` and `getCache` need to be used together.
 2. In the custom cache mode, `cacheTime` and `clearCache` will be unused, please implement it yourself according to the actual situation.
 
-<code src="./demo/setCache.tsx" />
+
+<Preview name="useRequest"
+  registryDependencies={['useBoolean']}
+ code={`
+
+import useRequest, { clearCache } from '@/src/hooks/ahooks/useRequest';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+
+const getArticle = async () => {
+  return new Promise<{ data: string; time: number }>((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: Mock.mock('@paragraph'),
+        time: Date.now(),
+      });
+    }, 1000);
+  });
+};
+
+const cacheKey = 'setCache-demo';
+
+const Article: React.FC = () => {
+  const { data, loading } = useRequest(getArticle, {
+    cacheKey,
+    setCache: (value) => localStorage.setItem(cacheKey, JSON.stringify(value)),
+    getCache: () => JSON.parse(localStorage.getItem(cacheKey) || '{}'),
+  });
+  if (!data && loading) {
+    return <p>Loading</p>;
+  }
+  return (
+    <>
+      <p>Background loading: {loading ? 'true' : 'false'}</p>
+      <p>Latest request time: {data?.time}</p>
+      <p>{data?.data}</p>
+    </>
+  );
+};
+
+
+const Example = () => {
+ const [state, { toggle }] = useBoolean();
+  return (
+    <div>
+      <button type="button" onClick={() => toggle()}>
+        show/hidden
+      </button>
+      {state && <Article />}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

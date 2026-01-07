@@ -42,7 +42,37 @@ A hook that executes the function right before the component is unmounted.
 
 ### Default Usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useUnmount"
+registryDependencies={['useBoolean']}
+ code={`
+import useUnmount from '@/src/hooks/ahooks/useUnmount';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import React from 'react';
+
+const MyComponent = () => {
+  useUnmount(() => {
+    console.info('unmount');
+  });
+
+  return <p>Hello World!</p>;
+};
+
+
+const Example = () => {
+   const [state, { toggle }] = useBoolean(true);
+
+  return (
+    <>
+      <button type="button" onClick={toggle}>
+        {state ? 'unmount' : 'mount'}
+      </button>
+      {state && <MyComponent />}
+    </>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -53,5 +83,5 @@ useUnmount(fn: () => void);
 ### Params
 
 | Property | Description                 | Type         | Default |
-| -- | ---- |
+| -------- | --------------------------- | ------------ | ------- |
 | fn       | The function to be executed | `() => void` | -       |

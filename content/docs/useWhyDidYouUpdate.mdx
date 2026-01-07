@@ -42,7 +42,49 @@ Help developers troubleshoot what changes have caused component rerender.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useWhyDidYouUpdate"
+ code={`
+import useWhyDidYouUpdate from '@/src/hooks/ahooks/useWhyDidYouUpdate';
+import React, { useState } from 'react';
+
+const Demo: React.FC<{ count: number }> = (props) => {
+  const [randomNum, setRandomNum] = useState(Math.random());
+
+  useWhyDidYouUpdate('useWhyDidYouUpdateComponent', { ...props, randomNum });
+
+  return (
+    <div>
+      <div>
+        <span>number: {props.count}</span>
+      </div>
+      <div>
+        randomNum: {randomNum}
+        <button onClick={() => setRandomNum(Math.random)} style={{ marginLeft: 8 }}>
+          🎲
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Example = () => {
+   const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <Demo count={count} />
+      <div>
+        <button onClick={() => setCount((prevCount) => prevCount - 1)}>count -</button>
+        <button onClick={() => setCount((prevCount) => prevCount + 1)} style={{ marginLeft: 8 }}>
+          count +
+        </button>
+      </div>
+      <p style={{ marginTop: 8 }}>Please open the browser console to view the output!</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -55,7 +97,7 @@ useWhyDidYouUpdate(componentName: string, props: IProps): void;
 ### Params
 
 | Property      | Description                                                                                 | Type     | Default |
-| - | - | -- | - |
+| ------------- | ------------------------------------------------------------------------------------------- | -------- | ------- |
 | componentName | Required, the name of the observation component                                             | `string` | -       |
 | props         | Required, data to be observed (`state` or `props` and other data that may lead to rerender) | `object` | -       |
 

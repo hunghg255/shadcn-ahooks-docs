@@ -1,6 +1,6 @@
 ---
-title: Custom refresh
-description: The API useRequest
+title: RefreshDeps
+description: The API RefreshDeps of useRequest.
 ---
 
 # RefreshDeps
@@ -29,11 +29,87 @@ useEffect(() => {
 
 ### Repeat last request
 
-<code src="./demo/refreshDeps.tsx" />
+<Preview name="useRequest"
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import { useState } from 'react';
+
+function getUsername(id: number) {
+  console.log('getUsername id:', id);
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('H' + Math.random().toString(36).substring(7));
+    }, 1000);
+  });
+}
+
+const Example = () => {
+   const [userId, setUserId] = useState<number>();
+  const { data, loading, run } = useRequest((id: number) => getUsername(id), {
+    refreshDeps: [userId],
+  });
+
+  return (
+    <div>
+    <p>Prev: {userId}</p>
+
+      <p>Username: {loading ? 'loading...' : data}</p>
+      <button onClick={() => setUserId(Math.random())}>Use previous id to refresh</button>
+      <button onClick={() => run(Math.random())}>Use latest id to refresh</button>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Custom refresh
 
-<code src="./demo/refreshDepsAction.tsx" />
+<Preview name="useRequest"
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import { useState } from 'react';
+
+function getUsername(id: number) {
+  console.log('getUsername id:', id);
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('H' + Math.random().toString(36).substring(7));
+    }, 1000);
+  });
+}
+
+const Example = () => {
+   const [userId, setUserId] = useState<number>();
+  const { data, loading, run } = useRequest((id: number) => getUsername(id), {
+    refreshDeps: [userId],
+    refreshDepsAction: () => {
+      if (typeof userId !== 'number') {
+        console.log('userId is invalid, skip refresh');
+        return;
+      }
+      run(userId);
+    },
+  });
+
+  return (
+    <div>
+    <p>Prev: {userId}</p>
+
+      <p>Username: {loading ? 'loading...' : data}</p>
+     <button onClick={() => setUserId(Math.random())}>
+        Use latest id to refresh (by \`refreshDeps\`)
+      </button>
+      <button onClick={() => run(Math.random())}>Use latest id to refresh (by \`run\`)</button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

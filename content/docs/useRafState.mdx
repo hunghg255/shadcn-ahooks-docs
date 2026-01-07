@@ -42,7 +42,43 @@ Update the state in [requestAnimationFrame](https://developer.mozilla.org/en-US/
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useRafState"
+ code={`
+import useRafState from '@/src/hooks/ahooks/useRafState';
+import React, { useEffect } from 'react';
+
+
+const Example = () => {
+  const [state, setState] = useRafState({
+    width: 0,
+    height: 0,
+  });
+
+  useEffect(() => {
+    const onResize = () => {
+      setState({
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+      });
+    };
+    onResize();
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  return (
+    <div>
+      <p>Try to resize the window </p>
+      current: {JSON.stringify(state)}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### API
 

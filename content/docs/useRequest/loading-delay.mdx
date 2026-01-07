@@ -20,7 +20,50 @@ For example, in the above scenario, if `getUsername` returns within 300ms, `load
 
 You can quickly click the button in the example below to experience the effect
 
-<code src="./demo/loadingDelay.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import { useState } from 'react';
+
+function getUsername(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('H' + Math.random().toString(36).substring(7));
+    }, 200);
+  });
+}
+
+const Example = () => {
+   const action = useRequest(getUsername);
+
+  const withLoadingDelayAction = useRequest(getUsername, {
+    loadingDelay: 300,
+  });
+
+  const trigger = () => {
+    action.run();
+    withLoadingDelayAction.run();
+  };
+
+  return (
+    <div>
+      <button type="button" onClick={trigger}>
+        run
+      </button>
+
+      <div style={{ margin: '24px 0', width: 300 }}>
+        Username: {action.loading ? 'Loading...' : action.data}
+      </div>
+      <div>
+        Username: {withLoadingDelayAction.loading ? 'Loading...' : withLoadingDelayAction.data}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 

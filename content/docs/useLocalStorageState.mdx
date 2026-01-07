@@ -42,19 +42,140 @@ A Hook that store state into localStorage.
 
 ### Store state into localStorage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useLocalStorageState"
+ code={`
+import useLocalStorageState from '@/src/hooks/ahooks/useLocalStorageState';
+
+const Example = () => {
+  const [message, setMessage] = useLocalStorageState<string | undefined>(
+    'use-local-storage-state-demo1',
+    {
+      defaultValue: 'Hello~',
+    },
+  );
+
+  return (
+    <>
+      <input
+        value={message || ''}
+        placeholder="Please enter some words..."
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <button style={{ margin: '0 8px' }} type="button" onClick={() => setMessage('Hello~')}>
+        Reset
+      </button>
+      <button type="button" onClick={() => setMessage(undefined)}>
+        Clear
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Store complex types of data
 
-<code src="./demo/demo2.tsx" />
+
+<Preview name="useLocalStorageState"
+ code={`
+import useLocalStorageState from '@/src/hooks/ahooks/useLocalStorageState';
+
+const defaultArray = ['a', 'e', 'i', 'o', 'u'];
+
+const Example = () => {
+  const [value, setValue] = useLocalStorageState('use-local-storage-state-demo2', {
+    defaultValue: defaultArray,
+  });
+
+  return (
+    <>
+      <p>{value?.join('-')}</p>
+      <button
+        type="button"
+        style={{ marginRight: '16px' }}
+        onClick={() => setValue([...value, Math.random().toString(36).slice(-1)])}
+      >
+        push random
+      </button>
+      <button type="button" onClick={() => setValue(defaultArray)}>
+        reset
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Custom serialization and deserialization functions
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useLocalStorageState"
+ code={`
+import useLocalStorageState from '@/src/hooks/ahooks/useLocalStorageState';
+
+const Example = () => {
+  const [message, setMessage] = useLocalStorageState<string | undefined>(
+    'use-local-storage-state-demo3',
+    {
+      defaultValue: 'Hello~',
+      serializer: (v) => v ?? '',
+      deserializer: (v) => v,
+    },
+  );
+
+  return (
+    <>
+      <input
+        value={message || ''}
+        placeholder="Please enter some words..."
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <button style={{ margin: '0 8px' }} type="button" onClick={() => setMessage('Hello~')}>
+        Reset
+      </button>
+      <button type="button" onClick={() => setMessage(undefined)}>
+        Clear
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Sync state with localStorage
 
-<code src="./demo/demo4.tsx" />
+<Preview name="useLocalStorageState"
+ code={`
+import useLocalStorageState from '@/src/hooks/ahooks/useLocalStorageState';
+
+
+function Counter() {
+  const [count, setCount] = useLocalStorageState('use-local-storage-state-demo4', {
+    defaultValue: 0,
+    listenStorageChange: true,
+  });
+
+  return (
+    <div style={{ marginBottom: '8px' }}>
+      <button style={{ marginRight: '8px' }} onClick={() => setCount(count! + 1)}>
+        count: {count}
+      </button>
+      <button onClick={() => setCount()}>Clear</button>
+    </div>
+  );
+}
+
+const Example = () => {
+
+  return (
+     <>
+      <Counter />
+      <Counter />
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -80,7 +201,14 @@ const [state, setState] = useLocalStorageState<T>(
 ### Result
 
 | Property | Description                 | Type                            |
-| -- | -- |
+| -------- | --------------------------- | ------------------------------- |
+| state    | Local `localStorage` value  | `T`                             |
+| setState | Update `localStorage` value | `(value?: SetState<T>) => void` |
+
+### Options
+
+| Property            | Description                                                                                                                                                                                             | Type                       | Default                       |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ----------------------------- |
 | defaultValue        | Default value                                                                                                                                                                                           | `any \| (() => any)`       | -                             |
 | listenStorageChange | Whether to listen storage changes. If `true`, when the stored value changes, all `useLocalStorageState` with the same `key` will synchronize their states, including different tabs of the same browser | `boolean`                  | `false`                       |
 | serializer          | Custom serialization method                                                                                                                                                                             | `(value: any) => string`   | `JSON.stringify`              |

@@ -42,7 +42,42 @@ Usage is the same as `useLayoutEffect`, but deps are compared with [react-fast-c
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useDeepCompareLayoutEffect"
+ code={`
+import React, { useLayoutEffect, useState, useRef } from 'react';
+import useDeepCompareLayoutEffect from '@/src/hooks/ahooks/useDeepCompareLayoutEffect';
+
+const Example = () => {
+   const [count, setCount] = useState(0);
+  const effectCountRef = useRef(0);
+  const deepCompareCountRef = useRef(0);
+
+  useLayoutEffect(() => {
+    effectCountRef.current += 1;
+  }, [{}]);
+
+  useDeepCompareLayoutEffect(() => {
+    deepCompareCountRef.current += 1;
+    return () => {
+      // do something
+    };
+  }, [{}]);
+
+  return (
+    <div>
+      <p>effectCount: {effectCountRef.current}</p>
+      <p>deepCompareCount: {deepCompareCountRef.current}</p>
+      <p>
+        <button type="button" onClick={() => setCount((c) => c + 1)}>
+          reRender
+        </button>
+      </p>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 

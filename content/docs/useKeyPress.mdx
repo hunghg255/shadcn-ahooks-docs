@@ -42,31 +42,322 @@ Listen for the keyboard press, support key combinations, and support alias.
 
 ### Basic usage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useKeyPress"
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import React, { useState } from 'react';
+
+const menus = ['menu-1', 'menu-2', 'menu-3'];
+const content = {
+  'menu-1': 'Content for menus 1',
+  'menu-2': 'Content for menus 2',
+  'menu-3': 'Content for menus 3',
+};
+
+const Example = () => {
+ const [counter, setCounter] = useState(0);
+
+  useKeyPress('uparrow', () => {
+    setCounter((s) => s + 1);
+  });
+
+  // keyCode value for ArrowDown
+  useKeyPress(40, () => {
+    setCounter((s) => s - 1);
+  });
+
+  return (
+    <div>
+      <p>Try pressing the following: </p>
+      <div>1. Press ArrowUp by key to increase</div>
+      <div>2. Press ArrowDown by keyCode to decrease</div>
+      <div>
+        counter: <span style={{ color: '#f00' }}>{counter}</span>
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Combination keys
 
-<code src="./demo/demo6.tsx" />
+
+<Preview name="useKeyPress"
+externalDependencies={['@ant-design/icons']}
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import { CheckOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+
+const Example = () => {
+  const [state, setState] = useState<number>();
+
+  useKeyPress(['shift.c'], () => {
+    setState(1);
+  });
+
+  useKeyPress(['meta'], () => {
+    setState(2);
+  });
+
+  useKeyPress('ctrl.alt.c', () => {
+    setState(3);
+  });
+
+  useKeyPress('ctrl.enter', () => {
+    setState(4);
+  });
+
+  // Attention: event.key === '0'
+  useKeyPress('ctrl.alt.0', () => {
+    setState(5);
+  });
+
+  return (
+    <div>
+      <p>Try pressing the following: </p>
+      <div>
+        1. Modifier key [shift.c]: {state === 1 && <CheckOutlined style={{ color: '#f00' }} />}
+      </div>
+      <div>
+        2. Modifier key [meta]: {state === 2 && <CheckOutlined style={{ color: '#f00' }} />}
+      </div>
+      <div>
+        3. Modifier key [ctrl.alt.c]: {state === 3 && <CheckOutlined style={{ color: '#f00' }} />}
+      </div>
+      <div>
+        4. Modifier key [ctrl.enter]: {state === 4 && <CheckOutlined style={{ color: '#f00' }} />}
+      </div>
+      <div>
+        5. Modifier key [ctrl.alt.0]: {state === 5 && <CheckOutlined style={{ color: '#f00' }} />}
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Exact match
 
-<code src="./demo/demo7.tsx"/>
+
+
+<Preview name="useKeyPress"
+externalDependencies={['@ant-design/icons']}
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import { CheckOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+
+const Example = () => {
+  const [state, setState] = useState<number>();
+
+  useKeyPress(['shift.c'], () => {
+    setState(1);
+  });
+
+  useKeyPress(
+    ['c'],
+    () => {
+      setState(2);
+    },
+    {
+      exactMatch: true,
+    },
+  );
+
+  return (
+    <div>
+      <p>Try pressing the following: </p>
+      <div>
+        1. Modifier key [shift.c]: {state === 1 && <CheckOutlined style={{ color: '#f00' }} />}
+      </div>
+      <div>2. Modifier key [c]: {state === 2 && <CheckOutlined style={{ color: '#f00' }} />}</div>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ### Multiple keys
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useKeyPress"
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import React, { useState } from 'react';
+
+const Example = () => {
+const [num, setNum] = useState<string>();
+  const [key, setKey] = useState<string>();
+
+  const filterKey = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  useKeyPress(filterKey, (event) => {
+    setNum(event.key);
+  });
+
+  // a s d f, Backspace, 8
+  useKeyPress([65, 83, 68, 70, 8, '8'], (event) => {
+    setKey(event.key);
+  });
+
+  return (
+    <div>
+      <p>Try pressing the following: </p>
+      <div>
+        1. Number key [0-9]: <span style={{ color: '#f00' }}>{num}</span>
+      </div>
+      <div>
+        2. Press key [a, s, d, f, Backspace, 8]: <span style={{ color: '#f00' }}>{key}</span>
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Get the trigger key
 
-<code src="./demo/demo8.tsx" />
+<Preview name="useKeyPress"
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import React, { useState } from 'react';
+
+const Example = () => {
+const [count, setCount] = useState<number>(0);
+
+  const keyCallbackMap = {
+    w: () => {
+      setCount((prev) => prev + 1);
+    },
+    s: () => {
+      setCount((prev) => prev - 1);
+    },
+    'shift.c': () => {
+      setCount(0);
+    },
+  };
+
+  useKeyPress(['w', 's', 'shift.c'], (e, key) => {
+    keyCallbackMap[key]();
+  });
+
+  return (
+    <div>
+      <p>Try pressing the following: </p>
+      <div>1. Press [w] to increase</div>
+      <div>2. Press [s] to decrease</div>
+      <div>3. Press [shift.c] to reset</div>
+      <p>
+        counter: <span style={{ color: '#f00' }}>{count}</span>
+      </p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Custom method
 
-<code src="./demo/demo4.tsx" />
+<Preview name="useKeyPress"
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import React, { useState } from 'react';
+
+const Example = () => {
+  const [key, setKey] = useState<string>();
+  const filterKey = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  useKeyPress(
+    (event) => !filterKey.includes(event.key),
+    (event) => {
+      if (event.type === 'keyup') {
+        setKey(event.key);
+      }
+    },
+    {
+      events: ['keydown', 'keyup'],
+    },
+  );
+
+  return (
+    <div>
+      Pressing key except number key：<span style={{ color: '#f00' }}>{key}</span>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Custom DOM
 
-<code src="./demo/demo5.tsx" />
+
+<Preview name="useKeyPress"
+ code={`
+import useKeyPress from '@/src/hooks/ahooks/useKeyPress';
+import React, { useState, useRef } from 'react';
+
+const Example = () => {
+ const inputRef = useRef(null);
+
+  const [text, setText] = useState('');
+  const [textRef, setTextRef] = useState('');
+  const [textSync, setTextSync] = useState('');
+  useKeyPress(
+    'enter',
+    (event: any) => {
+      const { value } = event.target;
+      setText(value);
+    },
+    {
+      events: ['keyup'],
+      target: () => document.getElementById('input'),
+    },
+  );
+
+  useKeyPress(
+    'enter',
+    (event: any) => {
+      const { value } = event.target;
+      setTextRef(value);
+    },
+    {
+      target: inputRef,
+    },
+  );
+
+  // Make sure the DOM exists
+  useKeyPress(
+    () => true,
+    (event: any) => {
+      const { value } = event.target;
+      setTextSync(value);
+    },
+    {
+      events: ['keyup'],
+      target: document.getElementById('input2'),
+    },
+  );
+
+  return (
+    <div>
+      <div>
+        <p>Input and pressing enter: {text}</p>
+        <input id="input" style={{ width: 300, marginRight: 24 }} />
+      </div>
+      <div style={{ marginTop: 24 }}>
+        <p>Input and pressing enter: {textRef}</p>
+        <input ref={inputRef} style={{ width: 300, marginRight: 24 }} />
+      </div>
+      <div style={{ marginTop: 24 }}>
+        <p>Input after enter change: {textSync}</p>
+        <input id="input2" style={{ width: 300, marginRight: 24 }} />
+      </div>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -84,7 +375,7 @@ useKeyPress(
 ### Params
 
 | Property     | Description                                                      | Type                                                            | Default |
-| | | - |
+| ------------ | ---------------------------------------------------------------- | --------------------------------------------------------------- | ------- |
 | keyFilter    | Support keyCode、alias、combination keys、array、custom function | `KeyType` \| `KeyType[]` \| `(event: KeyboardEvent) => boolean` | -       |
 | eventHandler | Callback function                                                | `(event: KeyboardEvent, key: KeyType) => void`                  | -       |
 | options      | Advanced options                                                 | `Options`                                                       | -       |
@@ -92,7 +383,7 @@ useKeyPress(
 ### Options
 
 | Property   | Description                                                                                                                                    | Type                                                        | Default       |
-| - | ---- |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------- |
 | events     | Trigger Events                                                                                                                                 | `('keydown' \| 'keyup')[]`                                  | `['keydown']` |
 | target     | DOM element or ref                                                                                                                             | `() => Element` \| `Element` \| `MutableRefObject<Element>` | -             |
 | exactMatch | Exact match. If set `true`, the event will only be trigger when the keys match exactly. For example, pressing [shift + c] will not trigger [c] | `boolean`                                                   | `false`       |

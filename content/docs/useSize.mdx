@@ -42,11 +42,47 @@ A hook that observes size change of an element.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useSize"
+ code={`
+import useSize from '@/src/hooks/ahooks/useSize';
+import React, { useRef } from 'react';
+
+const Example = () => {
+   const ref = useRef(null);
+  const size = useSize(ref);
+  return (
+    <div ref={ref}>
+      <p>Try to resize the preview window </p>
+      <p>
+        width: {size?.width}px, height: {size?.height}px
+      </p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Pass in the DOM element
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useSize"
+ code={`
+import useSize from '@/src/hooks/ahooks/useSize';
+
+const Example = () => {
+   const size = useSize(document.querySelector('body'));
+  return (
+    <div>
+      <p>Try to resize the preview window </p>
+      <p>
+        width: {size?.width}px, height: {size?.height}px
+      </p>
+    </div>
+  );
+
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -57,11 +93,11 @@ const size = useSize(target);
 ### Params
 
 | Property | Description               | Type                                                          | Default |
-| -- | - | - | - |
+| -------- | ------------------------- | ------------------------------------------------------------- | ------- |
 | target   | DOM element or ref object | `Element` \| `(() => Element)` \| `MutableRefObject<Element>` | -       |
 
 ### Result
 
 | Property | Description         | Type                                             | Default                                                                   |
-| -- | - | | - |
+| -------- | ------------------- | ------------------------------------------------ | ------------------------------------------------------------------------- |
 | size     | Size of the element | `{ width: number, height: number } \| undefined` | `{ width: target.clientWidth, height: target.clientHeight } \| undefined` |

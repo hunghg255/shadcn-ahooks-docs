@@ -42,11 +42,45 @@ A hook that tracks whether the element is being hovered.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useHover"
+ code={`
+import useHover from '@/src/hooks/ahooks/useHover';
+import React, { useRef } from 'react';
+
+const Example = () => {
+    const ref = useRef(null);
+  const isHovering = useHover(ref);
+  return <div ref={ref}>{isHovering ? 'hover' : 'leaveHover'}</div>;
+};
+
+export default Example;`} />
 
 ### Pass in DOM element
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useHover"
+ code={`
+import useHover from '@/src/hooks/ahooks/useHover';
+import React, { useRef } from 'react';
+
+const Example = () => {
+  const isHovering = useHover(() => document.getElementById('hover-div'), {
+    onEnter: () => {
+      console.log('onEnter');
+    },
+    onLeave: () => {
+      console.log('onLeave');
+    },
+    onChange: (isHover) => {
+      console.log('onChange', isHover);
+    },
+  });
+
+  return <div id="hover-div">{isHovering ? 'hover' : 'leaveHover'}</div>;
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -64,7 +98,14 @@ const isHovering = useHover(
 ### Params
 
 | Property | Description        | Type                                                        | Default |
-| -- | | | - | - |
+| -------- | ------------------ | ----------------------------------------------------------- | ------- |
+| target   | DOM element or ref | `() => Element` \| `Element` \| `MutableRefObject<Element>` | -       |
+| options  | More config        | `Options`                                                   | -       |
+
+### Options
+
+| Property | Description                             | Type                            | Default |
+| -------- | --------------------------------------- | ------------------------------- | ------- |
 | onEnter  | Callback to be executed on mouse hover  | `() => void`                    | -       |
 | onLeave  | Callback to be executed on mouse leave  | `() => void`                    | -       |
 | onChange | Callback to be executed on hover change | `(isHovering: boolean) => void` | -       |
@@ -72,5 +113,5 @@ const isHovering = useHover(
 ### Result
 
 | Property   | Description                          | Type      |
-| |
+| ---------- | ------------------------------------ | --------- |
 | isHovering | Whether the element is being hovered | `boolean` |

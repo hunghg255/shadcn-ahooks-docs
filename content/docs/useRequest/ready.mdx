@@ -17,13 +17,88 @@ The specific behavior is as follows:
 
 The following example demonstrates the behavior of `ready` in automatic mode. Every time `ready` changes from `false` to `true`, the request will be executed.
 
-<code src="./demo/ready.tsx" />
+<Preview name="useRequest"
+registryDependencies={['useToggle']}
+ code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useToggle from '@/src/hooks/ahooks/useToggle';
+
+function getUsername() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('H' + Math.random().toString(36).substring(7));
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  const [ready, { toggle }] = useToggle(false);
+
+  const { data, loading } = useRequest(getUsername, {
+    ready,
+  });
+
+  return (
+    <>
+      <p>
+        Ready: {JSON.stringify(ready)}
+        <button onClick={toggle} style={{ marginLeft: 16 }}>
+          Toggle Ready
+        </button>
+      </p>
+      <p>Username: {loading ? 'Loading' : data}</p>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## Manual mode
 
 The following example demonstrates the behavior of `ready` in manual mode. Only when `ready` is equal to `true`, `run` will be executed.
 
-<code src="./demo/manualReady.tsx" />
+<Preview name="useRequest"
+registryDependencies={['useToggle']}
+code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useToggle from '@/src/hooks/ahooks/useToggle';
+
+function getUsername() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('H' + Math.random().toString(36).substring(7));
+    }, 1000);
+  });
+}
+const Example = () => {
+   const [ready, { toggle }] = useToggle(false);
+
+  const { data, loading, run } = useRequest(getUsername, {
+    ready,
+    manual: true,
+  });
+
+  return (
+    <>
+      <p>
+        Ready: {JSON.stringify(ready)}
+        <button onClick={toggle} style={{ marginLeft: 16 }}>
+          Toggle Ready
+        </button>
+      </p>
+      <p>
+        Username: {loading ? 'Loading' : data}
+        <button type="button" onClick={run} style={{ marginLeft: 16 }}>
+          run
+        </button>
+      </p>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

@@ -66,7 +66,54 @@ If you want to let the child component notify the parent component, you can just
 
 ### Parent component shares a event
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useEventEmitter"
+ code={`
+import useEventEmitter, { EventEmitter } from '@/src/hooks/ahooks/useEventEmitter';
+import React, { useRef, FC } from 'react';
+
+const MessageBox: FC<{
+  focus$: EventEmitter<void>;
+}> = function (props) {
+  return (
+    <div style={{ paddingBottom: 24 }}>
+      <p>You received a message</p>
+      <button
+        type="button"
+        onClick={() => {
+          props.focus$.emit();
+        }}
+      >
+        Reply
+      </button>
+    </div>
+  );
+};
+
+const InputBox: FC<{
+  focus$: EventEmitter<void>;
+}> = function (props) {
+  const inputRef = useRef<any>();
+  props.focus$.useSubscription(() => {
+    inputRef.current.focus();
+  });
+  return (
+    <input ref={inputRef} placeholder="Enter reply" style={{ width: '100%', padding: '4px' }} />
+  );
+};
+
+const Example = () => {
+ const focus$ = useEventEmitter();
+  return (
+    <>
+      <MessageBox focus$={focus$} />
+      <InputBox focus$={focus$} />
+    </>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -79,6 +126,6 @@ const result: Result = useEventEmitter<T>();
 ### Result
 
 | Property        | Description                   | Type                                   |
-| -- | -- |
+| --------------- | ----------------------------- | -------------------------------------- |
 | emit            | Emit a new event.             | `(val: T) => void`                     |
 | useSubscription | Subscribe to a event emitter. | `(callback: (val: T) => void) => void` |

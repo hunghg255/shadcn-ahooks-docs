@@ -49,7 +49,7 @@ A hook alike `useLayoutEffect` but skips running the effect for the first time.
 ## Usage
 
 ```js
-import useUrlState from '@ahooksjs/use-url-state';
+import useUrlState from '@/src/hooks/ahooks/useUrlState';
 ```
 
 ## Examples
@@ -62,19 +62,221 @@ React Router V6: https://codesandbox.io/s/autumn-shape-odrt9?file=/App.tsx
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" hideActions='["CSB"]' />
+```tsx
+import React from 'react';
+import useUrlState from '@/src/hooks/ahooks/useUrlState';
+
+export default () => {
+  const [state, setState] = useUrlState({ count: '1' });
+
+  return (
+    <>
+      <button
+        style={{ marginRight: 8 }}
+        type="button"
+        onClick={() => setState({ count: Number(state.count || 0) + 1 })}
+      >
+        add
+      </button>
+      <button type="button" onClick={() => setState({ count: undefined })}>
+        clear
+      </button>
+      <div>state: {state?.count}</div>
+    </>
+  );
+};
+```
+
 
 ### Multi-state management
 
-<code src="./demo/demo2.tsx" hideActions='["CSB"]' />
+```tsx
+import React from 'react';
+import useUrlState from '@/src/hooks/ahooks/useUrlState';
+
+export default () => {
+  const [state, setState] = useUrlState({ page: '1', pageSize: '10' });
+
+  return (
+    <>
+      <div>
+        page: {state.page}
+        <span style={{ paddingLeft: 8 }}>
+          <button
+            onClick={() => {
+              setState((s) => ({ page: Number(s.page) + 1 }));
+            }}
+          >
+            +
+          </button>
+          <button
+            onClick={() => {
+              setState((s) => ({ page: Number(s.page) - 1 }));
+            }}
+            style={{ margin: '0 8px' }}
+          >
+            -
+          </button>
+          <button
+            onClick={() => {
+              setState({ page: undefined });
+            }}
+          >
+            reset
+          </button>
+        </span>
+      </div>
+      <br />
+      <div>
+        pageSize: {state.pageSize}
+        <span style={{ paddingLeft: 8 }}>
+          <button
+            onClick={() => {
+              setState((s) => ({ pageSize: Number(s.pageSize) + 1 }));
+            }}
+          >
+            +
+          </button>
+          <button
+            onClick={() => {
+              setState((s) => ({ pageSize: Number(s.pageSize) - 1 }));
+            }}
+            style={{ margin: '0 8px' }}
+          >
+            -
+          </button>
+          <button
+            onClick={() => {
+              setState({ pageSize: undefined });
+            }}
+          >
+            reset
+          </button>
+        </span>
+      </div>
+    </>
+  );
+};
+```
 
 ### Multi-state management (split)
 
-<code src="./demo/demo4.tsx" hideActions='["CSB"]' />
+```tsx
+import React from 'react';
+import useUrlState from '@/src/hooks/ahooks/useUrlState';
+
+export default () => {
+  const [page, setPage] = useUrlState({ page: '1' });
+  const [pageSize, setPageSize] = useUrlState({ pageSize: '10' });
+
+  return (
+    <>
+      <div>
+        page: {page.page}
+        <span style={{ paddingLeft: 8 }}>
+          <button
+            onClick={() => {
+              setPage((s) => ({ page: Number(s.page) + 1 }));
+            }}
+          >
+            +
+          </button>
+          <button
+            onClick={() => {
+              setPage((s) => ({ page: Number(s.page) - 1 }));
+            }}
+            style={{ margin: '0 8px' }}
+          >
+            -
+          </button>
+          <button
+            onClick={() => {
+              setPage({ page: undefined });
+            }}
+          >
+            reset
+          </button>
+        </span>
+      </div>
+      <br />
+      <div>
+        pageSize: {pageSize.pageSize}
+        <span style={{ paddingLeft: 8 }}>
+          <button
+            onClick={() => {
+              setPageSize((s) => ({ pageSize: Number(s.pageSize) + 1 }));
+            }}
+          >
+            +
+          </button>
+          <button
+            onClick={() => {
+              setPageSize((s) => ({ pageSize: Number(s.pageSize) - 1 }));
+            }}
+            style={{ margin: '0 8px' }}
+          >
+            -
+          </button>
+          <button
+            onClick={() => {
+              setPageSize({ pageSize: undefined });
+            }}
+          >
+            reset
+          </button>
+        </span>
+      </div>
+      <div>
+        <button
+          onClick={async () => {
+            await setPageSize({ pageSize: undefined });
+            await setPage({ page: undefined });
+          }}
+        >
+          reset all
+        </button>
+      </div>
+    </>
+  );
+};
+```
 
 ### Custom query-string options
 
-<code src="./demo/demo3.tsx" hideActions='["CSB"]' />
+```tsx
+import React from 'react';
+import useUrlState from '@/src/hooks/ahooks/useUrlState';
+
+export default () => {
+  const [state, setState] = useUrlState(
+    { ids: ['1', '2', '3'] },
+    {
+      parseOptions: {
+        arrayFormat: 'comma',
+      },
+      stringifyOptions: {
+        arrayFormat: 'comma',
+      },
+    },
+  );
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          const arr = Array(3)
+            .fill(1)
+            .map(() => Math.floor(Math.random() * 10));
+          setState({ ids: arr });
+        }}
+      >
+        变更数组state
+      </button>
+      <div>ids: {JSON.stringify(state.ids)}</div>
+    </div>
+  );
+};
+```
 
 ## API
 

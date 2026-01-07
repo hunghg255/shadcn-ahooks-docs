@@ -42,11 +42,116 @@ A hook that allows you to use virtual list to render huge chunks of list data.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useVirtualList"
+ code={`
+import useVirtualList from '@/src/hooks/ahooks/useVirtualList';
+import React, { useMemo, useRef } from 'react';
+
+const Example = () => {
+   const containerRef = useRef(null);
+  const wrapperRef = useRef(null);
+
+  const originalList = useMemo(() => Array.from(Array(99999).keys()), []);
+
+  const [list] = useVirtualList(originalList, {
+    containerTarget: containerRef,
+    wrapperTarget: wrapperRef,
+    itemHeight: 60,
+    overscan: 10,
+  });
+  return (
+    <>
+      <div ref={containerRef} style={{ height: '300px', overflow: 'auto', border: '1px solid' }}>
+        <div ref={wrapperRef}>
+          {list.map((ele) => (
+            <div
+              style={{
+                height: 52,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: '1px solid #e8e8e8',
+                marginBottom: 8,
+              }}
+              key={ele.index}
+            >
+              Row: {ele.data}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Dynamic item height
 
-<code src="./demo/demo2.tsx" />
+
+<Preview name="useVirtualList"
+ code={`
+import useVirtualList from '@/src/hooks/ahooks/useVirtualList';
+import React, { useMemo, useRef } from 'react';
+
+const Example = () => {
+  const containerRef = useRef(null);
+  const wrapperRef = useRef(null);
+
+  const originalList = useMemo(() => Array.from(Array(99999).keys()), []);
+
+  const [value, onChange] = React.useState<number>(0);
+
+  const [list, scrollTo] = useVirtualList(originalList, {
+    containerTarget: containerRef,
+    wrapperTarget: wrapperRef,
+    itemHeight: (i) => \(i \% 2 === 0 \? 42 \+ 8 \: 84 \+ 8\),
+    overscan: 10,
+  });
+
+  return (
+    <div>
+      <div style={{ textAlign: 'right', marginBottom: 16 }}>
+        <input
+          style={{ width: 120 }}
+          placeholder="line number"
+          type="number"
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+        />
+        <button
+          style={{ marginLeft: 8 }}
+          type="button"
+          onClick={() => {
+            scrollTo(Number(value));
+          }}
+        >
+          scroll to
+        </button>
+      </div>
+      <div ref={containerRef} style={{ height: '300px', overflow: 'auto' }}>
+        <div ref={wrapperRef}>
+          {list.map((ele) => (
+            <div
+              style={{
+                height: ele.index \% 2 === 0 \? 42 \: 84,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: '1px solid #e8e8e8',
+                marginBottom: 8,
+              }}
+              key={ele.index}
+            >
+              Row: {ele.data} size: {ele.index % 2 === 0 ? 'small' : 'large'}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+export default Example;`} />
 
 ## API
 
@@ -65,13 +170,22 @@ const [list, scrollTo] = useVirtualList<T>(
 ### Params
 
 | Property     | Description                                                                                                                                                | Type      | Default |
-| | | - |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------- |
 | originalList | The original list that contains a lot of data entries. **Attention: must undergo useMemo processing or never change, otherwise there will be a dead loop** | `T[]`     | `[]`    |
 | options      | config                                                                                                                                                     | `Options` | -       |
 
 ### Options
 
 | Property        | Description                                                             | Type                                                        | Default |
-| -- | --- |
+| --------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
+| containerTarget | Outter Container，support DOM element or ref                            | `() => Element` \| `Element` \| `MutableRefObject<Element>` | -       |
+| wrapperTarget   | Inner Container，DOM element or ref                                     | `() => Element` \| `Element` \| `MutableRefObject<Element>` | -       |
+| itemHeight      | Item height, accept a pixel value or a function that returns the height | `number` \| `((index: number, data: T) => number)`          | -       |
+| overscan        | The extra buffer items outside of the view area                         | `number`                                                    | `5`     |
+
+### Result
+
+| Property | Description                                            | Type                           |
+| -------- | ------------------------------------------------------ | ------------------------------ |
 | list     | The current portion of data need to be rendered to DOM | `{ data: T, index: number }[]` |
 | scrollTo | Scroll to specific index                               | `(index: number) => void`      |

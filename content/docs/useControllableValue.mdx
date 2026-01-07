@@ -42,15 +42,93 @@ In some components, we need the state to be managed by itself or controlled by i
 
 ### Uncontrolled component
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useControllableValue"
+ code={`
+import React, { useState, useRef } from 'react';
+import useControllableValue from '@/src/hooks/ahooks/useControllableValue';
+
+const Example = (props: any) => {
+  const [state, setState] = useControllableValue<string>(props, {
+    defaultValue: '',
+  });
+
+  return (
+    <>
+      <input value={state} onChange={(e) => setState(e.target.value)} style={{ width: 300 }} />
+      <button type="button" onClick={() => setState('')} style={{ marginLeft: 8 }}>
+        Clear
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### Controlled component
 
-<code src="./demo/demo2.tsx" />
+
+<Preview name="useControllableValue"
+ code={`
+import React, { useState, useRef } from 'react';
+import useControllableValue from '@/src/hooks/ahooks/useControllableValue';
+
+const ControllableComponent = (props: any) => {
+  const [state, setState] = useControllableValue<string>(props);
+
+  return <input value={state} onChange={(e) => setState(e.target.value)} style={{ width: 300 }} />;
+};
+
+const Example = () => {
+   const [state, setState] = useState<string>('');
+  const clear = () => {
+    setState('');
+  };
+
+  return (
+    <>
+      <ControllableComponent value={state} onChange={setState} />
+      <button type="button" onClick={clear} style={{ marginLeft: 8 }}>
+        Clear
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ### No value, have onChange component
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useControllableValue"
+ code={`
+import React, { useState, useRef } from 'react';
+import useControllableValue from '@/src/hooks/ahooks/useControllableValue';
+
+const ControllableComponent = (props: any) => {
+  const [state, setState] = useControllableValue<string>(props);
+
+  return (
+    <input
+      value={state}
+      onChange={(e) => {
+        setState(e.target.value);
+      }}
+      style={{ width: 300 }}
+    />
+  );
+};
+
+const Example = () => {
+   const [state, setState] = useState<number>(0);
+
+  return (
+    <>
+      <div style={{ marginBottom: 8 }}>state:{state}</div>
+      <ControllableComponent onChange={setState} />
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -61,21 +139,21 @@ const [state, setState] = useControllableValue(props: Record<string, any>, optio
 ### Result
 
 | Property | Description | Type                                                |
-| -- | |
+| -------- | ----------- | --------------------------------------------------- |
 | state    | State       | -                                                   |
 | setState | Set state   | `(value: any \| ((prevState: any) => any)) => void` |
 
 ### Params
 
 | Property | Description            | Type                  | Default |
-| -- | | - |
+| -------- | ---------------------- | --------------------- | ------- |
 | props    | Component props        | `Record<string, any>` | -       |
 | options  | Optional configuration | `Options`             | -       |
 
 ### Options
 
 | Property             | Description                                                                     | Type     | Default        |
-| -- | - | -- | -- |
+| -------------------- | ------------------------------------------------------------------------------- | -------- | -------------- |
 | defaultValue         | The default value, will be overridden by `props.defaultValue` and `props.value` | -        | -              |
 | defaultValuePropName | Custom defaultValue attribute name                                               | `string` | `defaultValue` |
 | valuePropName        | Custom value attribute name                                                     | `string` | `value`        |

@@ -40,7 +40,23 @@ A Hook can tell if the page is visible, refer to [visibilityState API](https://d
 
 ## Examples
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useDocumentVisibility"
+ code={`
+import useDocumentVisibility from '@/src/hooks/ahooks/useDocumentVisibility';
+import React, { useEffect } from 'react';
+
+const Example = () => {
+  const documentVisibility = useDocumentVisibility();
+
+  useEffect(() => {
+    console.log(\`Current document visibility state: \${documentVisibility}\`);
+  }, [documentVisibility]);
+
+  return <div>Current document visibility state: {documentVisibility}</div>;
+};
+
+export default Example;`} />
 
 ## API
 
@@ -51,5 +67,5 @@ const documentVisibility = useDocumentVisibility();
 ### Result
 
 | Property           | Description                     | Type                                               |
-| | - | -- |
+| ------------------ | ------------------------------- | -------------------------------------------------- |
 | documentVisibility | Whether the document is visible | `visible`\| `hidden` \| `prerender` \| `undefined` |

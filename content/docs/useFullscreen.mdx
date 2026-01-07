@@ -42,19 +42,122 @@ manages DOM full screen.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+```tsx
+import useFullscreen from '@/src/hooks/ahooks/useFullscreen';
+import React, { useRef } from 'react';
+
+const Example = () => {
+  const ref = useRef(null);
+  const [isFullscreen, { enterFullscreen, exitFullscreen, toggleFullscreen }] = useFullscreen(ref);
+  return (
+    <div ref={ref} style={{ background: 'white' }}>
+      <div style={{ marginBottom: 16 }}>{isFullscreen ? 'Fullscreen' : 'Not fullscreen'}</div>
+      <div>
+        <button type="button" onClick={enterFullscreen}>
+          enterFullscreen
+        </button>
+        <button type="button" onClick={exitFullscreen} style={{ margin: '0 8px' }}>
+          exitFullscreen
+        </button>
+        <button type="button" onClick={toggleFullscreen}>
+          toggleFullscreen
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Example;
+```
 
 ### Image full screen
 
-<code src="./demo/demo2.tsx" />
+```tsx
+import React from 'react';
+import { useFullscreen } from 'ahooks';
+import img from './react-hooks.jpg';
+
+export default () => {
+  const [, { enterFullscreen }] = useFullscreen(() => document.getElementById('fullscreen-img'));
+  return (
+    <div style={{ background: 'white' }}>
+      <div style={{ marginBottom: 16 }}>
+        <img id="fullscreen-img" src={img} style={{ width: 320 }} alt="" />
+      </div>
+      <button type="button" onClick={enterFullscreen}>
+        enterFullscreen
+      </button>
+    </div>
+  );
+};
+```
 
 ### Page full screen
 
-<code src="./demo/demo3.tsx" />
+```tsx
+import React, { useRef } from 'react';
+import { useFullscreen } from 'ahooks';
+
+export default () => {
+  const ref = useRef(null);
+  const [isFullscreen, { toggleFullscreen, enterFullscreen, exitFullscreen }] = useFullscreen(ref, {
+    pageFullscreen: true,
+  });
+
+  return (
+    <div style={{ background: 'white' }}>
+      <div ref={ref} style={{ background: '#4B6BCD', padding: 12 }}>
+        <div style={{ marginBottom: 16 }}>{isFullscreen ? 'Fullscreen' : 'Not fullscreen'}</div>
+        <button type="button" onClick={enterFullscreen}>
+          enterFullscreen
+        </button>
+        <button type="button" onClick={exitFullscreen} style={{ margin: '0 8px' }}>
+          exitFullscreen
+        </button>
+        <button type="button" onClick={toggleFullscreen}>
+          toggleFullscreen
+        </button>
+      </div>
+    </div>
+  );
+};
+```
 
 ### Coexist with other full screen operations
 
-<code src="./demo/demo4.tsx" />
+```tsx
+import React, { useRef } from 'react';
+import { useFullscreen } from 'ahooks';
+
+function vanillaToggleFullscreen(element) {
+  const isFullscreen = !!document.fullscreenElement;
+
+  if (isFullscreen) {
+    document.exitFullscreen();
+  } else {
+    element.requestFullscreen();
+  }
+}
+
+export default () => {
+  const ref = useRef(null);
+  const [isFullscreen, { toggleFullscreen }] = useFullscreen(ref);
+
+  return (
+    <div ref={ref} style={{ background: 'white' }}>
+      <div style={{ marginBottom: 16 }}>{isFullscreen ? 'Fullscreen' : 'Not fullscreen'}</div>
+      <div>
+        <button style={{ marginRight: '8px' }} onClick={toggleFullscreen}>
+          ahooks toggleFullscreen
+        </button>
+        <button onClick={() => vanillaToggleFullscreen(ref.current)}>
+          vanilla toggleFullscreen
+        </button>
+      </div>
+    </div>
+  );
+};
+```
 
 ## API
 
@@ -73,7 +176,14 @@ const [isFullscreen, {
 ### Params
 
 | Property | Description        | Type                                                        | Default |
-| -- | | -- | | - |
+| -------- | ------------------ | ----------------------------------------------------------- | ------- |
+| target   | DOM element or ref | `Element` \| `() => Element` \| `MutableRefObject<Element>` | -       |
+| options  | Setting            | `Options`                                                   | -       |
+
+### Options
+
+| Property       | Description                                                                                                                   | Type                                                   | Default |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------- |
 | onExit         | Exit full screen trigger                                                                                                      | `() => void`                                           | -       |
 | onEnter        | Enter full screen trigger                                                                                                     | `() => void`                                           | -       |
 | pageFullscreen | Whether to enable full screen of page. If its type is object, it can set `className` and `z-index` of the full screen element | `boolean` \| `{ className?: string, zIndex?: number }` | `false` |
@@ -81,7 +191,7 @@ const [isFullscreen, {
 ### Result
 
 | Property         | Description          | Type         |
-| --- |
+| ---------------- | -------------------- | ------------ |
 | isFullscreen     | Is full screen       | `boolean`    |
 | enterFullscreen  | Enter full screen    | `() => void` |
 | exitFullscreen   | Exit full screen     | `() => void` |

@@ -18,7 +18,36 @@ const { data, error, loading } = useRequest(service);
 
 <br />
 
-<code src="./demo/default.tsx" />
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+
+function getUsername(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.5) {
+        resolve('John Doe');
+      } else {
+        reject(new Error('Failed to get username'));
+      }
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  const { data, error, loading } = useRequest(getUsername);
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+  if (loading) {
+    return <div>loading...</div>;
+  }
+  return <div>Username: {data}</div>;
+};
+
+export default Example;`} />
+
 
 ## Manually trigger
 
@@ -49,9 +78,105 @@ The difference between `run` and `runAsync` is:
 
 Next, we will demonstrate the difference between `run` and `runAsync` through the simple scenario of editing the username.
 
-<code src="./demo/manual-run.tsx" />
+In this example, we use run(username) to edit the username, and use onSuccess and onError to handle success and failure.
 
-<code src="./demo/manual-runAsync.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import { useState } from 'react';
+
+function changeUsername(username: string): Promise<{ success: boolean }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true });
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+   const [state, setState] = useState('');
+
+  const { loading, run } = useRequest(changeUsername, {
+    manual: true,
+    onSuccess: (result, params) => {
+      if (result.success) {
+        setState('');
+        console.log(\`Username changed to: \${params[0]}\`);
+      }
+    },
+  });
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button disabled={loading} type="button" onClick={() => run(state)}>
+        {loading ? 'Loading' : 'Edit'}
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
+
+
+
+In this example, we use runAsync(username) to edit the user name. At this time, we must catch the exception through catch.
+
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import { useState } from 'react';
+
+function changeUsername(username: string): Promise<{ success: boolean }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true });
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+   const [state, setState] = useState('');
+
+  const { loading, runAsync } = useRequest(changeUsername, {
+    manual: true
+  });
+
+   const onClick = async () => {
+    try {
+      await runAsync(state);
+      setState('');
+      console.log(\`Username changed to: \${state}\`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button disabled={loading} type="button" onClick={onClick}>
+        {loading ? 'Loading' : 'Edit'}
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## The life cycle
 
@@ -62,7 +187,60 @@ Next, we will demonstrate the difference between `run` and `runAsync` through th
 - `onError`: Triggered when the request is rejected
 - `onFinally`: Triggered when the request is completed
 
-<code src="./demo/lifeCycle.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import React, { useState } from 'react';
+
+function editUsername(username: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.5) {
+        resolve();
+      } else {
+        reject(new Error('Failed to modify username'));
+      }
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  const [state, setState] = useState('');
+
+  const { loading, run } = useRequest(editUsername, {
+    manual: true,
+    onBefore: (params) => {
+      console.info(\`Start Request: \${params[0]}\`);
+    },
+    onSuccess: (result, params) => {
+      setState('');
+      console.log(\`The username was changed to "\${params[0]}" !\`);
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+    onFinally: (params, result, error) => {
+      console.info(\`Request finish\`);
+    },
+  });
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button disabled={loading} type="button" onClick={() => run(state)}>
+        {loading ? 'Loading' : 'Edit'}
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## Refresh (repeat the last request)
 
@@ -74,7 +252,46 @@ If in the scenario of reading user information
 2. We updated user information by some ways
 3. We want to re-initiate the last request, then we can use `refresh` instead of `run(1)`, which is very useful in scenarios with complex parameters
 
-<code src="./demo/refresh.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import Mock from 'mockjs';
+import React, { useEffect } from 'react';
+
+function getUsername(id: number): Promise<string> {
+  console.log('use-request-refresh-id', id);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(Mock.mock('@name'));
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+    const { data, loading, run, refresh } = useRequest((id: number) => getUsername(id), {
+    manual: true,
+  });
+
+  useEffect(() => {
+    run(1);
+  }, []);
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
+  return (
+    <div>
+      <p>Username: {data}</p>
+      <button onClick={refresh} type="button">
+        Refresh
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 Of course, the difference between `refresh` and `refreshAsync` is the same as `run` and `runAsync`.
 
@@ -88,7 +305,78 @@ In the following example, we demonstrate a scenario of `mutate`.
 
 We have modified the user name, but we do not want to wait for the request to be successful before giving feedback to the user. Instead, modify the data directly, then call the modify request in background, and provide additional feedback after the request returns.
 
-<code src="./demo/mutate.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import Mock from 'mockjs';
+import React, { useState, useRef } from 'react';
+
+function getUsername(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(Mock.mock('@name'));
+    }, 1000);
+  });
+}
+
+function editUsername(username: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.5) {
+        resolve();
+      } else {
+        reject(new Error('Failed to modify username'));
+      }
+    }, 1000);
+  });
+}
+
+const Example = () => {
+  // store last username
+  const lastRef = useRef<string>();
+
+  const [state, setState] = useState('');
+
+  // get username
+  const { data: username, mutate } = useRequest(getUsername);
+
+  // edit username
+  const { run: edit } = useRequest(editUsername, {
+    manual: true,
+    onSuccess: (result, params) => {
+      setState('');
+      console.log(\`The username was changed to "\${params[0]}" !\`);
+    },
+    onError: (error) => {
+      console.error(error.message);
+      mutate(lastRef.current);
+    },
+  });
+
+  const onChange = () => {
+    lastRef.current = username;
+    mutate(state);
+    edit(state);
+  };
+
+  return (
+    <div>
+      <p>Username: {username}</p>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button type="button" onClick={onChange}>
+        Edit
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## Cancel response
 
@@ -101,7 +389,60 @@ At the same time, `useRequest` will automatically ignore the response at the fol
 - When the component is unmounting, the ongoing promise
 - Race cancellation, when the previous promise has not returned, if the next promise is initiated, the previous promise will be ignored
 
-<code src="./demo/cancel.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+
+function editUsername(username: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.5) {
+        resolve();
+      } else {
+        reject(new Error('Failed to modify username'));
+      }
+    }, 1000);
+  });
+}
+
+
+
+const Example = () => {
+   const [state, setState] = useState('');
+
+  const { loading, run, cancel } = useRequest(editUsername, {
+    manual: true,
+    onSuccess: (result, params) => {
+      setState('');
+      console.log(\`The username was changed to "\${params[0]}" !\`);
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter username"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button disabled={loading} type="button" onClick={() => run(state)}>
+        {loading ? 'Loading' : 'Edit'}
+      </button>
+      <button type="button" onClick={cancel} style={{ marginLeft: 16 }}>
+        Cancel
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## Parameter management
 
@@ -109,7 +450,55 @@ The `params` returned by `useRequest` will record the parameters of `service`. F
 
 If we set `options.manual = false`, the parameters of calling `service` for the first time can be set by `options.defaultParams`.
 
-<code src="./demo/params.tsx" />
+
+<Preview name="useRequest" code={`
+
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import Mock from 'mockjs';
+import React, { useState } from 'react';
+
+function getUsername(id: string): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(Mock.mock('@name'));
+    }, 1000);
+  });
+}
+
+const Example = () => {
+   const [state, setState] = useState('');
+
+  // get username
+  const {
+    data: username,
+    run,
+    params,
+  } = useRequest(getUsername, {
+    defaultParams: ['1'],
+  });
+
+  const onChange = () => {
+    run(state);
+  };
+
+  return (
+    <div>
+      <input
+        onChange={(e) => setState(e.target.value)}
+        value={state}
+        placeholder="Please enter userId"
+        style={{ width: 240, marginRight: 16 }}
+      />
+      <button type="button" onClick={onChange}>
+        GetUserName
+      </button>
+      <p style={{ marginTop: 8 }}>UserId: {params[0]}</p>
+      <p>Username: {username}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

@@ -1,6 +1,6 @@
 ---
 title: useFocusWithin
-description: Monitor whether the current focus is within a certain area, Same as css attribute [:focus-within](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within).
+description: Monitor whether the current focus is within a certain area, Same as css attribute
 ---
 
 ## Overview
@@ -36,17 +36,86 @@ Monitor whether the current focus is within a certain area, Same as css attribut
   </Tab>
 </Tabs>
 
-Monitor whether the current focus is within a certain area, Same as css attribute [:focus-within](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within).
-
 ## Examples
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useFocusWithin"
+ code={`
+import useFocusWithin from '@/src/hooks/ahooks/useFocusWithin';
+import React, { useRef } from 'react';
+
+const Example = () => {
+  const ref = useRef(null);
+  const isFocusWithin = useFocusWithin(ref, {
+    onFocus: () => {
+      console.info('focus');
+    },
+    onBlur: () => {
+      console.info('blur');
+    },
+  });
+  return (
+    <div>
+      <div
+        ref={ref}
+        style={{
+          padding: 16,
+          backgroundColor: isFocusWithin ? 'red' : '',
+          border: '1px solid gray',
+        }}
+      >
+        <label style={{ display: 'block' }}>
+          First Name: <input />
+        </label>
+        <label style={{ display: 'block', marginTop: 16 }}>
+          Last Name: <input />
+        </label>
+      </div>
+      <p>isFocusWithin: {JSON.stringify(isFocusWithin)}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Pass in DOM element
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useFocusWithin"
+ code={`
+import useFocusWithin from '@/src/hooks/ahooks/useFocusWithin';
+
+export const DEFAULT_FAVICON_URL = 'https://ahooks.js.org/simple-logo.svg';
+
+export const GOOGLE_FAVICON_URL = 'https://www.google.com/favicon.ico';
+
+const Example = () => {
+  const isFocusWithin = useFocusWithin(() => document.getElementById('focus-area'));
+
+  return (
+    <div>
+      <div
+        id="focus-area"
+        style={{
+          padding: 16,
+          backgroundColor: isFocusWithin ? 'red' : '',
+          border: '1px solid gray',
+        }}
+      >
+        <label style={{ display: 'block' }}>
+          First Name: <input />
+        </label>
+        <label style={{ display: 'block', marginTop: 16 }}>
+          Last Name: <input />
+        </label>
+      </div>
+      <p>isFocusWithin: {JSON.stringify(isFocusWithin)}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -64,5 +133,20 @@ const isFocusWithin = useFocusWithin(
 ### Params
 
 | Property | Description        | Type                                                        | Default |
-| -- | | | - | --- |
+| -------- | ------------------ | ----------------------------------------------------------- | ------- |
+| target   | DOM element or ref | `() => Element` \| `Element` \| `MutableRefObject<Element>` | -       |
+| options  | More config        | `Options`                                                   | -       |
+
+### Options
+
+| Property | Description                             | Type                               | Default |
+| -------- | --------------------------------------- | ---------------------------------- | ------- |
+| onFocus  | Callback to be executed on focus        | `(e: FocusEvent) => void`          | -       |
+| onBlur   | Callback to be executed on blur         | `(e: FocusEvent) => void`          | -       |
+| onChange | Callback to be executed on focus change | `(isFocusWithin: boolean) => void` | -       |
+
+### Result
+
+| Property      | Description                              | Type      |
+| ------------- | ---------------------------------------- | --------- |
 | isFocusWithin | Whether the focus is in the current area | `boolean` |

@@ -42,15 +42,82 @@ Use addEventListener elegant by Hook.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useEventListener"
+ code={`
+import useEventListener from '@/src/hooks/ahooks/useEventListener';
+import React, { useState, useRef } from 'react';
+
+const Example = () => {
+ const [value, setValue] = useState(0);
+  const ref = useRef(null);
+
+  useEventListener(
+    'click',
+    () => {
+      setValue(value + 1);
+    },
+    { target: ref },
+  );
+
+  return (
+    <button ref={ref} type="button">
+      You click {value} times
+    </button>
+  );
+};
+
+export default Example;`} />
 
 ### Listen for keydown
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useEventListener"
+ code={`
+import useEventListener from '@/src/hooks/ahooks/useEventListener';
+import React, { useState } from 'react';
+
+const Example = () => {
+  const [value, setValue] = useState('');
+
+  useEventListener('keydown', (ev) => {
+    setValue(ev.code);
+  });
+
+  return <p>Your press key is {value}</p>;
+};
+
+export default Example;`} />
+
 
 ### Listen for multiple events
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useEventListener"
+ code={`
+import useEventListener from '@/src/hooks/ahooks/useEventListener';
+import React, { useRef, useState } from 'react';
+
+const Example = () => {
+ const ref = useRef(null);
+  const [value, setValue] = useState('');
+
+  useEventListener(
+    ['mouseenter', 'mouseleave'],
+    (ev) => {
+      setValue(ev.type);
+    },
+    { target: ref },
+  );
+
+  return (
+    <button ref={ref} type="button">
+      You Option is {value}
+    </button>
+  );
+};
+
+export default Example;`} />
+
+
 
 ## API
 
@@ -65,7 +132,15 @@ useEventListener(
 ### Property
 
 | Property  | Description            | type                   | default |
-| - | -- | ----- |
+| --------- | ---------------------- | ---------------------- | ------- |
+| eventName | Event name             | `string` \| `string[]` | -       |
+| handler   | Callback function      | `(ev: Event) => void`  | -       |
+| options   | More options(optional) | `Options`              | -       |
+
+### Options
+
+| Property | Description                                                                                                                                                                                                                                     | type                                                                                          | default  |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | -------- |
 | target   | DOM element or ref                                                                                                                                                                                                                              | `(() => Element)` \| `Element` \| `React.MutableRefObject<Element>` \| `Window` \| `Document` | `window` |
 | capture  | Optional, a Boolean indicating that events of this type will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree.                                                                    | `boolean`                                                                                     | `false`  |
 | once     | Optional, A Boolean indicating that the listener should be invoked at most once after being added. If true, the listener would be automatically removed when invoked.                                                                           | `boolean`                                                                                     | `false`  |

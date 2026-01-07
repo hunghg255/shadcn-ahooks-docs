@@ -42,11 +42,69 @@ useSetState works similar to `this.setState` of class component, used to manage 
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useSetState"
+ code={`
+import useSetState from '@/src/hooks/ahooks/useSetState';
+
+interface State {
+  hello: string;
+  [key: string]: any;
+}
+
+const Example = () => {
+  const [state, setState] = useSetState<State>({
+    hello: '',
+  });
+
+  return (
+    <div>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+      <p>
+        <button type="button" onClick={() => setState({ hello: 'world' })}>
+          set hello
+        </button>
+        <button type="button" onClick={() => setState({ foo: 'bar' })} style={{ margin: '0 8px' }}>
+          set foo
+        </button>
+      </p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Updating with callback
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useSetState"
+ code={`
+import useSetState from '@/src/hooks/ahooks/useSetState';
+
+interface State {
+  hello: string;
+  count: number;
+}
+
+
+const Example = () => {
+  const [state, setState] = useSetState<State>({
+    hello: 'world',
+    count: 0,
+  });
+
+  return (
+    <div>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+      <p>
+        <button type="button" onClick={() => setState((prev) => ({ count: prev.count + 1 }))}>
+          count + 1
+        </button>
+      </p>
+    </div>
+  );
+};
+
+export default Example;`} />
+
 
 ## API
 
@@ -57,5 +115,12 @@ const [state, setState] = useSetState<T>(initialState);
 ### Result
 
 | Property | Description          | Type                                                                                      | Default |
-| -- | -- | ---- |
+| -------- | -------------------- | ----------------------------------------------------------------------------------------- | ------- |
+| state    | Current state        | `T`                                                                                       | -       |
+| setState | Update current state | `(state: Partial<T> \| null) => void` \| `((prevState: T) => Partial<T> \| null) => void` | -       |
+
+### Params
+
+| Property     | Description   | Type           | Default |
+| ------------ | ------------- | -------------- | ------- |
 | initialState | Initial state | `T \| () => T` | -       |

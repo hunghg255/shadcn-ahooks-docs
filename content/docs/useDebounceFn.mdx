@@ -42,7 +42,33 @@ A hook that deal with the debounced function.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useDebounceFn"
+ code={`
+import React, { useState } from 'react';
+import useDebounceFn from '@/src/hooks/ahooks/useDebounceFn';
+
+const Example = () => {
+  const [value, setValue] = useState(0);
+  const { run } = useDebounceFn(
+    () => {
+      setValue(value + 1);
+    },
+    {
+      wait: 500,
+    },
+  );
+
+  return (
+    <div>
+      <p style={{ marginTop: 16 }}> Clicked count: {value} </p>
+      <button type="button" onClick={run}>
+        Click fast!
+      </button>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -60,7 +86,14 @@ const {
 ### Params
 
 | Property | Description                        | Type                      | Default |
-| -- | | - |
+| -------- | ---------------------------------- | ------------------------- | ------- |
+| fn       | The function to debounce.          | `(...args: any[]) => any` | -       |
+| options  | Config for the debounce behaviors. | `Options`                 | -       |
+
+### Options
+
+| Property | Description                                                         | Type      | Default |
+| -------- | ------------------------------------------------------------------- | --------- | ------- |
 | wait     | The number of milliseconds to delay.                                | `number`  | `1000`  |
 | leading  | Specify invoking on the leading edge of the timeout.                | `boolean` | `false` |
 | trailing | Specify invoking on the trailing edge of the timeout.               | `boolean` | `true`  |
@@ -69,7 +102,7 @@ const {
 ### Result
 
 | Property | Description                                            | Type                      |
-| -- | | - |
+| -------- | ------------------------------------------------------ | ------------------------- |
 | run      | invoke and pass parameters to fn.                      | `(...args: any[]) => any` |
 | cancel   | Cancel the invocation of currently debounced function. | `() => void`              |
 | flush    | Immediately invoke currently debounced function.       | `() => void`              |

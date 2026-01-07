@@ -40,15 +40,80 @@ A hook for manage countdown.
 
 ## Countdown to target time
 
-<code src="./demo/demo1.tsx" />
+
+<Preview name="useCountDown"
+ code={`
+
+import useCountDown from '@/src/hooks/ahooks/useCountDown';
+
+const Example = () => {
+   const [, formattedRes] = useCountDown({
+    targetDate: \`\${new Date().getFullYear()}-12-31 23:59:59\`,
+  });
+  const { days, hours, minutes, seconds, milliseconds } = formattedRes;
+  return (
+    <p>
+      There are {days} days {hours} hours {minutes} minutes {seconds} seconds {milliseconds}{' '}
+      milliseconds until {new Date().getFullYear()}-12-31 23:59:59
+    </p>
+  );
+};
+
+export default Example;`} />
 
 ## Dynamic config
 
-<code src="./demo/demo2.tsx" />
+<Preview name="useCountDown"
+ code={`
+import React, { useState } from 'react';
+import useCountDown from '@/src/hooks/ahooks/useCountDown';
+
+const Example = () => {
+ const [targetDate, setTargetDate] = useState<number>();
+
+  const [countdown] = useCountDown({
+    targetDate,
+    onEnd: () => {
+      alert('End of the time');
+    },
+  });
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          setTargetDate(Date.now() + 5000);
+        }}
+        disabled={countdown !== 0}
+      >
+        {countdown === 0 ? 'Start Interval' : \`Reset After \${Math.round(countdown / 1000)}s\`}
+      </button>
+      <button
+        onClick={() => {
+          setTargetDate(undefined);
+        }}
+        style={{ marginLeft: 8 }}
+      >
+        stop
+      </button>
+    </>
+  );
+};
+
+export default Example;`} />
 
 ## Config leftTime
 
-<code src="./demo/demo3.tsx" />
+<Preview name="useCountDown"
+ code={`
+import useCountDown from '@/src/hooks/ahooks/useCountDown';
+
+const Example = () => {
+  const [countdown] = useCountDown({ leftTime: 60 * 1000 });
+  return <p>{countdown}</p>;
+};
+
+export default Example;`} />
 
 ## API
 
@@ -87,7 +152,16 @@ If both `leftTime` and `targetDate` are passed, the `targetDate` is ignored, the
 ### Params
 
 | Property   | Description                                  | Type         | Default |
-| | ----- |
+| ---------- | -------------------------------------------- | ------------ | ------- |
+| leftTime   | The rest of time, in milliseconds            | `number`     | -       |
+| targetDate | Target time                                  | `TDate`      | -       |
+| interval   | Time interval between ticks, in milliseconds | `number`     | `1000`  |
+| onEnd      | Function to call when countdown completes    | `() => void` | -       |
+
+### Return
+
+| Params          | Description                              | Type           |
+| --------------- | ---------------------------------------- | -------------- |
 | countdown       | Timestamp to targetDate, in milliseconds | `number`       |
 | formattedResult | Formatted countdown                      | `FormattedRes` |
 

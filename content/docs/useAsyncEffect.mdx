@@ -42,11 +42,88 @@ useEffect support async function.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useAsyncEffect"
+ code={`
+
+import useAsyncEffect from '@/src/hooks/ahooks/useAsyncEffect';
+import React, { useState } from 'react';
+
+function mockCheck(): Promise<boolean> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 3000);
+  });
+}
+
+
+const Example = () => {
+  const [pass, setPass] = useState<boolean>();
+
+  useAsyncEffect(async () => {
+    setPass(await mockCheck());
+  }, []);
+
+  return (
+    <div>
+      {pass === undefined && 'Checking...'}
+      {pass === true && 'Check passed.'}
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ### Break off
 
-<code src="./demo/demo2.tsx" />
+
+<Preview name="useAsyncEffect"
+ code={`
+
+import useAsyncEffect from '@/src/hooks/ahooks/useAsyncEffect';
+import React, { useState } from 'react';
+
+function mockCheck(val: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(val.length > 0);
+    }, 1000);
+  });
+}
+
+
+const Example = () => {
+  const [value, setValue] = useState('');
+  const [pass, setPass] = useState<boolean>();
+
+  useAsyncEffect(
+    async function* () {
+      setPass(undefined);
+      const result = await mockCheck(value);
+      yield; // Check whether the effect is still valid, if it is has been cleaned up, stop at here.
+      setPass(result);
+    },
+    [value],
+  );
+
+  return (
+    <div>
+      <input
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+      />
+      <p>
+        {pass === null && 'Checking...'}
+        {pass === false && 'Check failed.'}
+        {pass === true && 'Check passed.'}
+      </p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 

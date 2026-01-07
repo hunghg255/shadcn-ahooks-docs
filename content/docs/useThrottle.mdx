@@ -42,7 +42,29 @@ A hook that deal with the throttled value.
 
 ### Default usage
 
-<code src="./demo/demo1.tsx" />
+<Preview name="useThrottle"
+ code={`
+import useThrottle from '@/src/hooks/ahooks/useThrottle';
+import React, { useState } from 'react';
+
+const Example = () => {
+   const [value, setValue] = useState<string>();
+  const throttledValue = useThrottle(value, { wait: 500 });
+
+  return (
+    <div>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Typed value"
+        style={{ width: 280 }}
+      />
+      <p style={{ marginTop: 16 }}>throttledValue: {throttledValue}</p>
+    </div>
+  );
+};
+
+export default Example;`} />
 
 ## API
 
@@ -56,14 +78,14 @@ const throttledValue = useThrottle(
 ### Params
 
 | Property | Description                        | Type      | Default |
-| -- | | - |
+| -------- | ---------------------------------- | --------- | ------- |
 | value    | The value to throttle.             | `any`     | -       |
 | options  | Config for the throttle behaviors. | `Options` | -       |
 
 ### Options
 
 | Property | Description                                           | Type      | Default |
-| -- | | - |
+| -------- | ----------------------------------------------------- | --------- | ------- |
 | wait     | The number of milliseconds to delay.                  | `number`  | `1000`  |
 | leading  | Specify invoking on the leading edge of the timeout.  | `boolean` | `true`  |
 | trailing | Specify invoking on the trailing edge of the timeout. | `boolean` | `true`  |
