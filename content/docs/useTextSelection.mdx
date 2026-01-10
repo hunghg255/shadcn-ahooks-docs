@@ -85,9 +85,10 @@ export default Example;`} />
 ### Translate user text selection
 
 ```tsx
-import { useRequest, useTextSelection } from 'ahooks';
 import { Popover, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
+import useRequest from '@/src/hooks/ahooks/useRequest';
+import useTextSelection from '@/src/hooks/ahooks/useTextSelection';
 
 const getResult = (keyword: string): Promise<string> => {
   const trimedText = keyword.trim() !== '';

@@ -61,7 +61,7 @@ useFusionTable encapsulates the commonly used [Fusion Form](https://fusion.desig
 ```tsx
 import { Pagination, Table } from '@alifd/next';
 import React from 'react';
-import { useFusionTable } from 'ahooks';
+import useFusionTable from '@/src/hooks/ahooks/useFusionTable';
 
 interface Item {
   name: {
@@ -121,7 +121,8 @@ In the following example, you can experience the data binding between form and t
 ```tsx
 import React from 'react';
 import { Table, Pagination, Field, Form, Input, Button, Icon } from '@alifd/next';
-import { useFusionTable } from 'ahooks';
+import useFusionTable from '@/src/hooks/ahooks/useFusionTable';
+
 import ReactJson from 'react-json-view';
 
 interface Item {
@@ -264,7 +265,8 @@ The following example sets paging data and form data during initialization.
 ```tsx
 import { Button, Field, Form, Icon, Input, Pagination, Select, Table } from '@alifd/next';
 import React from 'react';
-import { useFusionTable } from 'ahooks';
+import useFusionTable from '@/src/hooks/ahooks/useFusionTable';
+
 import ReactJson from 'react-json-view';
 
 interface Item {
@@ -408,7 +410,8 @@ Before the form is submitted, we will automatically validate the form data. If t
 ```tsx
 import React from 'react';
 import { Table, Pagination, Field, Form, Input, Select, Icon } from '@alifd/next';
-import { useFusionTable } from 'ahooks';
+import useFusionTable from '@/src/hooks/ahooks/useFusionTable';
+
 import ReactJson from 'react-json-view';
 
 interface Item {
@@ -499,7 +502,8 @@ By setting `cacheKey`, we can apply the data caching for the `Form` and `Table` 
 ```tsx
 import React, { useState } from 'react';
 import { Table, Pagination, Field, Form, Input, Button } from '@alifd/next';
-import { useFusionTable } from 'ahooks';
+import useFusionTable from '@/src/hooks/ahooks/useFusionTable';
+
 import ReactJson from 'react-json-view';
 
 interface Item {

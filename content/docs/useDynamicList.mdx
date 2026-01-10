@@ -112,7 +112,7 @@ export default Example;
 
 ```tsx
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { useDynamicList } from 'ahooks';
+import useDynamicList from '@/src/hooks/ahooks/useDynamicList';
 import { Button, Form, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 
@@ -206,7 +206,7 @@ export default () => {
 import React, { useState } from 'react';
 import { Form, Button, Input } from 'antd';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { useDynamicList } from 'ahooks';
+import useDynamicList from '@/src/hooks/ahooks/useDynamicList';
 
 export default () => {
   const { list, remove, getKey, insert, resetList, sortList } = useDynamicList(['David', 'Jack']);
@@ -278,7 +278,7 @@ import { DragOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Table } from 'antd';
 import React, { useState } from 'react';
 import ReactDragListView from 'react-drag-listview';
-import { useDynamicList } from 'ahooks';
+import useDynamicList from '@/src/hooks/ahooks/useDynamicList';
 
 interface Item {
   name?: string;

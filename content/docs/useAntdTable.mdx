@@ -62,7 +62,7 @@ The following demos are for antd v4. For v3, please refer to: https://ahooks-v2.
 ```tsx
 import { Table } from 'antd';
 import React from 'react';
-import { useAntdTable } from 'ahooks';
+import useAntdTable from '@/src/hooks/ahooks/useAntdTable';
 
 interface Item {
   name: {
@@ -129,7 +129,7 @@ In the following example, you can try out the data binding between form and tabl
 ```tsx
 import React from 'react';
 import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
-import { useAntdTable } from 'ahooks';
+import useAntdTable from '@/src/hooks/ahooks/useAntdTable';
 import ReactJson from 'react-json-view';
 
 const { Option } = Select;
@@ -275,7 +275,7 @@ The following example sets paging data and form data during initialization.
 ```tsx
 import React from 'react';
 import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
-import { useAntdTable } from 'ahooks';
+import useAntdTable from '@/src/hooks/ahooks/useAntdTable';
 import ReactJson from 'react-json-view';
 
 const { Option } = Select;
@@ -421,7 +421,7 @@ Before the form is submitted, we will call `form.validateFields` to validate the
 ```tsx
 import { Form, Input, Select, Table } from 'antd';
 import React from 'react';
-import { useAntdTable } from 'ahooks';
+import useAntdTable from '@/src/hooks/ahooks/useAntdTable';
 import ReactJson from 'react-json-view';
 
 const { Option } = Select;
@@ -529,7 +529,8 @@ By setting `cacheKey`, we can apply the data caching for the `Form` and `Table`.
 ```tsx
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Row, Table, Select } from 'antd';
-import { useAntdTable, clearCache } from 'ahooks';
+import useAntdTable from '@/src/hooks/ahooks/useAntdTable';
+import { clearCache } from '@/src/hooks/ahooks/useRequest';
 import ReactJson from 'react-json-view';
 
 const { Option } = Select;

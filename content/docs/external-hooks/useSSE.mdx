@@ -27,10 +27,38 @@ A hook for handling Server-Sent Events (SSE) connections with automatic lifecycl
 - Progress tracking for long-running operations
 - Any scenario requiring server-push updates
 
+## Installation
+
+<OpenInV0Button url="https://shadcn-ahooks.vercel.app/r/useSSE.json" />
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSSE.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSSE.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSSE.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useSSE.json
+  ```
+  </Tab>
+</Tabs>
+
+
 ## Usage
 
 ```tsx
-import { useSSE } from 'ahooks';
+import useSSE from '@/src/hooks/external-hooks/useSSE';
 
 function LiveFeed() {
   const { readyState, close, reconnect } = useSSE({
@@ -56,7 +84,7 @@ function LiveFeed() {
 
 ```tsx
 import React, { useState } from 'react';
-import { useSSE } from 'ahooks';
+import useSSE from '@/src/hooks/external-hooks/useSSE';
 
 export default () => {
   const [messages, setMessages] = useState<string[]>([]);
@@ -97,7 +125,7 @@ export default () => {
 
 ```tsx
 import React, { useState } from 'react';
-import { useSSE } from 'ahooks';
+import useSSE from '@/src/hooks/external-hooks/useSSE';
 
 interface ChatMessage {
   id: string;
@@ -160,7 +188,7 @@ export default () => {
 
 ```tsx
 import React, { useState } from 'react';
-import { useSSE } from 'ahooks';
+import useSSE from '@/src/hooks/external-hooks/useSSE';
 
 interface ProgressEvent {
   progress: number;
@@ -209,7 +237,7 @@ export default () => {
 
 ```tsx
 import React, { useState } from 'react';
-import { useSSE } from 'ahooks';
+import useSSE from '@/src/hooks/external-hooks/useSSE';
 
 export default () => {
   const [metrics, setMetrics] = useState({ users: 0, requests: 0, errors: 0 });

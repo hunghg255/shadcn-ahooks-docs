@@ -50,7 +50,8 @@ description: usePagination is implemented based on useRequest and encapsulates c
 The default usage is the same as `useRequest`, but an additional `pagination` parameter will be returned, which contains all pagination information and functions to operate pagination.
 
 ```tsx
-import { usePagination } from 'ahooks';
+import usePagination from '@/src/hooks/ahooks/usePagination';
+
 import { Pagination } from 'antd';
 import Mock from 'mockjs';
 import React from 'react';
@@ -129,7 +130,7 @@ The following code demonstrates that the gender parameter is added. When the gen
 import { Pagination } from 'antd';
 import Mock from 'mockjs';
 import React, { useEffect, useState } from 'react';
-import { usePagination } from 'ahooks';
+import usePagination from '@/src/hooks/ahooks/usePagination';
 
 interface UserListItem {
   id: string;
@@ -233,8 +234,8 @@ export default () => {
 `refreshDeps` is a syntactic sugar. When it changes, it will reset the page to the first page and request data again. Generally, you can put the dependent conditions here. The following example implements the previous function more conveniently through `refreshDeps`.
 
 ```tsx
-import { usePagination } from 'ahooks';
-import { useUpdateEffect } from 'ahooks';
+import usePagination from '@/src/hooks/ahooks/usePagination';
+import useUpdateEffect from '@/src/hooks/ahooks/useUpdateEffect';
 import { Pagination } from 'antd';
 import Mock from 'mockjs';
 import React, { useState } from 'react';
@@ -331,11 +332,13 @@ export default () => {
 Through the `params` caching capability of `useRequest`, we can cache paging data and other conditions.
 
 ```tsx
-import { useBoolean, useUpdateEffect } from 'ahooks';
+import useBoolean from '@/src/hooks/ahooks/useBoolean';
+import useUpdateEffect from '@/src/hooks/ahooks/useUpdateEffect';
 import { Pagination } from 'antd';
 import Mock from 'mockjs';
 import React, { useState } from 'react';
-import { usePagination } from 'ahooks';
+import usePagination from '@/src/hooks/ahooks/usePagination';
+
 
 interface UserListItem {
   id: string;

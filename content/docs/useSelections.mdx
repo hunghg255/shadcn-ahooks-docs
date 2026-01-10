@@ -45,7 +45,7 @@ This hook is used for Checkbox group, supports multiple selection, single select
 ```tsx
 import { Checkbox, Col, Row } from 'antd';
 import React, { useMemo, useState } from 'react';
-import { useSelections } from 'ahooks';
+import useSelections from '@/src/hooks/ahooks/useSelections';
 
 export default () => {
   const [hideOdd, setHideOdd] = useState(false);
@@ -93,7 +93,7 @@ export default () => {
 ```tsx
 import { Checkbox, Col, Row } from 'antd';
 import React, { useMemo, useState } from 'react';
-import { useSelections } from 'ahooks';
+import useSelections from '@/src/hooks/ahooks/useSelections';
 
 export default () => {
   const [hideOdd, setHideOdd] = useState(false);
@@ -142,7 +142,7 @@ export default () => {
 ```tsx
 import { Checkbox, Divider, Pagination, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useSelections } from 'ahooks';
+import useSelections from '@/src/hooks/ahooks/useSelections';
 
 interface DataType {
   id: number;
