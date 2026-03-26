@@ -22,11 +22,38 @@ A hook that helps you detect and track `img` decode and painted states by levera
 - Implement progressive image reveal, fade-in animations, or lazy-loading effects
 - Track image load health and handle decode errors cleanly
 
+## Installation
+
+<OpenInV0Button url="https://shadcn-ahooks.vercel.app/r/useImageDecode.json" />
+
+<Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useImageDecode.json
+  ```
+  </Tab>
+  <Tab value="npm">
+  ```bash
+  npx shadcn@latest add https://shadcn-ahooks.vercel.app/r/useImageDecode.json
+  ```
+  </Tab>
+  <Tab value="yarn">
+  ```bash
+  yarn shadcn@latest add https://shadcn-ahooks.vercel.app/r/useImageDecode.json
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun shadcn@latest add https://shadcn-ahooks.vercel.app/r/useImageDecode.json
+  ```
+  </Tab>
+</Tabs>
+
 ## Usage
 
 ```tsx
 import React, { useRef } from "react";
-import { useImageDecode } from "@ahooks/external-hooks";
+import { useImageDecode } from "@/src/hooks/external-hooks/useImageDecode";
 
 function MyImage({ src }: { src: string }) {
   const ref = useRef<HTMLImageElement>(null);
